@@ -1,0 +1,16 @@
+rescript = 1
+rule astj
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
+o rescript\src\ExpressServerTemplate.ast : astj ..\..\rescript\src\ExpressServerTemplate.res
+rule deps
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash a748e75d40b4427a4941822f2976366a $in
+  restat = 1
+o rescript\src\ExpressServerTemplate.d : deps rescript\src\ExpressServerTemplate.ast
+rule mij
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js $i
+  dyndep = 1
+  restat = 1
+o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi ..\js\rescript\src\ExpressServerTemplate.bs.js : mij rescript\src\ExpressServerTemplate.ast
+o rescript\src\ExpressDefaultController.ast : astj ..\..\rescript\src\ExpressDefaultController.res
+o rescript\src\ExpressDefaultController.d : deps rescript\src\ExpressDefaultController.ast
+o rescript\src\ExpressDefaultController.cmj rescript\src\ExpressDefaultController.cmi ..\js\rescript\src\ExpressDefaultController.bs.js : mij rescript\src\ExpressDefaultController.ast

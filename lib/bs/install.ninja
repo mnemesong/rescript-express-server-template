@@ -1,0 +1,14 @@
+rescript = 1
+rule cp
+  command = cmd.exe /C copy /Y $i $out >NUL
+rule touch
+ command = cmd.exe /C type nul >>$out & copy $out+,, >NUL
+o ExpressServerTemplate.cmi : cp ..\bs\rescript\src\ExpressServerTemplate.cmi
+o ExpressServerTemplate.cmj : cp ..\bs\rescript\src\ExpressServerTemplate.cmj
+o ExpressServerTemplate.cmt : cp ..\bs\rescript\src\ExpressServerTemplate.cmt
+o ExpressServerTemplate.res : cp ..\..\rescript\src\ExpressServerTemplate.res
+o ExpressDefaultController.cmi : cp ..\bs\rescript\src\ExpressDefaultController.cmi
+o ExpressDefaultController.cmj : cp ..\bs\rescript\src\ExpressDefaultController.cmj
+o ExpressDefaultController.cmt : cp ..\bs\rescript\src\ExpressDefaultController.cmt
+o ExpressDefaultController.res : cp ..\..\rescript\src\ExpressDefaultController.res
+build install.stamp : touch ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj 

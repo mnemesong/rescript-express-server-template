@@ -1,0 +1,15 @@
+{
+    "name": "rescript-express-server-template",
+    "sources": [
+      {
+        "dir": "rescript",
+        "subdirs": true
+      }
+    ],
+    "package-specs": [
+      {
+        "module": "commonjs"
+      }
+    ],
+    "suffix": ".bs.js"
+  }
