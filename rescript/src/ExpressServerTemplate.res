@@ -44,7 +44,7 @@ type serverRespType =
     | Json(string)
     | Redirect(string)
 
-type handlerFunc = (unknown) => serverRespType
+type handlerFunc = (unknown, unknown) => serverRespType
 
 module type ILogger = {
     open Belt
@@ -76,7 +76,7 @@ module type IExpressServerTemplate = (
 ) => {
     open Belt
 
-    let run: () => Result.t<unit, Logger.error>
+    let run: (int) => Result.t<unit, Logger.error>
 }
 
 module ExpressServerTemplate: IExpressServerTemplate = (
@@ -229,9 +229,24 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         }
     }
 
-    let run = (): Result.t<unit, Logger.error> => {
+    let startServer = (port: int): Result.t<unit, Logger.error> => try {
+        let result: (int) => unit = %raw(`
+            function(p) {
+                app.listen(p, () => {
+                    console.log("Server start")
+                })
+            }
+        `)
+        result(port)
+        Ok()
+    } catch {
+        | Js.Exn.Error(obj) => Error(Logger.wrap(obj))
+    }
+
+    let run = (port: int): Result.t<unit, Logger.error> => {
         initExpressApp(appUnit)
             -> Result.flatMap(registerActions)
+            -> Result.flatMap(() => startServer(port))
     }
 
 }

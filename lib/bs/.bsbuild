@@ -1,6 +1,9 @@
-2
+5
+ExpressLoggerStub
+ExpressControllerStub
 ExpressServerTemplate
 ExpressDefaultController
-rescript\src	
-1
+ExpressServerTemplateTest
+rescript\stubs	rescript\src	rescript\test-app	
+1
 0
