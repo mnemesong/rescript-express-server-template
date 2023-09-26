@@ -1,10 +1,4 @@
-module type IExpressLoggerStub = {
-    include ExpressServerTemplate.ILogger
-
-    let err: level
-}
-
-module ExpressLoggerStub: IExpressLoggerStub = {
+module ExpressLoggerStub: ExpressServerTemplate.ILogger = {
     open Belt
 
     type error = string
@@ -27,4 +21,6 @@ module ExpressLoggerStub: IExpressLoggerStub = {
             | Some(msg) => msg
             | None => ""
         }
+
+    let getUnknownError = () => "Unknown error"
 }

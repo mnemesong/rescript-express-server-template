@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTemplateTest.ast : astj ..\..\rescript\test-app\ExpressServerTemplateTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 46fc484ce4791db01d402486c84759a1 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 615ca124268fc0722e58458c7b6cf9ec $in
   restat = 1
 o rescript\test-app\ExpressServerTemplateTest.d : deps rescript\test-app\ExpressServerTemplateTest.ast
 rule mij
@@ -17,6 +17,9 @@ o rescript\stubs\ExpressLoggerStub.cmj rescript\stubs\ExpressLoggerStub.cmi ..\j
 o rescript\stubs\ExpressControllerStub.ast : astj ..\..\rescript\stubs\ExpressControllerStub.res
 o rescript\stubs\ExpressControllerStub.d : deps rescript\stubs\ExpressControllerStub.ast
 o rescript\stubs\ExpressControllerStub.cmj rescript\stubs\ExpressControllerStub.cmi ..\js\rescript\stubs\ExpressControllerStub.bs.js : mij rescript\stubs\ExpressControllerStub.ast
+o rescript\stubs\ExpressRequestResponseManagerStub.ast : astj ..\..\rescript\stubs\ExpressRequestResponseManagerStub.res
+o rescript\stubs\ExpressRequestResponseManagerStub.d : deps rescript\stubs\ExpressRequestResponseManagerStub.ast
+o rescript\stubs\ExpressRequestResponseManagerStub.cmj rescript\stubs\ExpressRequestResponseManagerStub.cmi ..\js\rescript\stubs\ExpressRequestResponseManagerStub.bs.js : mij rescript\stubs\ExpressRequestResponseManagerStub.ast
 o rescript\src\ExpressServerTemplate.ast : astj ..\..\rescript\src\ExpressServerTemplate.res
 o rescript\src\ExpressServerTemplate.d : deps rescript\src\ExpressServerTemplate.ast
 o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi ..\js\rescript\src\ExpressServerTemplate.bs.js : mij rescript\src\ExpressServerTemplate.ast

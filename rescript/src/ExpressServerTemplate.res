@@ -6,8 +6,10 @@ app.use(express.urlencoded())
 app.use(express.json())
 `)
 
+type fileAwaitingField = (string, int)
+
 type isMultipart =
-    | Multipart
+    | Multipart(array<fileAwaitingField>)
     | NotMultipart
 
 type specialRouteType =
@@ -51,28 +53,40 @@ module type ILogger = {
 
     type error
     type level
+
     let log: (level, error) => unit
     let initExpressApp: (unknown) => Result.t<unit, error>
     let wrap: (Js.Exn.t) => error
+    let getUnknownError: () => error
+    let err: level
 }
 
-module type IController = (Logger: ILogger) => {
+module type IController = {
     open Belt
 
     type action
     type middleware
+    type error
 
     let getAllActions: () => array<action>
     let getHandlerType: (action) => handlerType
     let getHandlerFunction: (action) => handlerFunc
     let getPath: (action) => string
-    let initExpressApp: (unknown) => Result.t<unit, Logger.error>
+    let initExpressApp: (unknown) => Result.t<unit, error>
     let getMiddlewares: (action) => array<middleware>
+}
+
+module type IRequestResponseManager = {
+    type error
+
+    let initExpressApp: (unknown) => result<unit, error>
+    let buildMultipartDataMiddleware: (array<fileAwaitingField>) => array<unknown>
 }
 
 module type IExpressServerTemplate = (
     Logger: ILogger, 
-    Controller: IController
+    Controller: IController with type error = Logger.error,
+    RequestResponseManager: IRequestResponseManager with type error = Logger.error
 ) => {
     open Belt
 
@@ -81,13 +95,14 @@ module type IExpressServerTemplate = (
 
 module ExpressServerTemplate: IExpressServerTemplate = (
     Logger: ILogger, 
-    ControllerFunctor: IController
+    Controller: IController with type error = Logger.error,
+    RequestResponseManager: IRequestResponseManager with type error = Logger.error
 ) => {
     open Belt
-    module Controller = ControllerFunctor(Logger)
 
     let initExpressApp = (app: unknown) => {
         Logger.initExpressApp(app)
+            -> Result.flatMap(() => RequestResponseManager.initExpressApp(app))
             -> Result.flatMap(() => Controller.initExpressApp(app))
     }
 
@@ -114,7 +129,10 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         Ok()
     } catch {
         | Js.Exn.Error(obj) => Error(Logger.wrap(obj))
+        | _ => Error(Logger.getUnknownError())
     }
+
+    
 
     let registerPost = (
         path: string,
@@ -122,30 +140,30 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         handlerFunc: handlerFunc,
         isMultipart: isMultipart
     ): Result.t<unit, Logger.error> => try {
-        let isMulti = switch(isMultipart) {
-            | Multipart => true
-            | NotMultipart => false
+        let multiMiddlewares: array<unknown> = switch(isMultipart) {
+            | Multipart(fileFields) => 
+                RequestResponseManager.buildMultipartDataMiddleware(fileFields)
+            | NotMultipart => []
         }
         let res: (
             string, 
             array<Controller.middleware>, 
             handlerFunc, 
-            bool
+            array<unknown>
         ) => unit = %raw(`
-            function(path, middlewares, handlerFunc, isMulti) {
-                const middlewares2 = isMulti
-                    ? [multer().none()].concat(middlewares)
-                    : middlewares
+            function(path, middlewares, handlerFunc, multiMiddlewares) {
+                const middlewares2 = multiMiddlewares.concat(middlewares)
                 const funParams = [path]
                     .concat(middlewares2)
                     .concat([handlerFunc]);
                 app.post(...funParams);
             }
         `)
-        res(path, middlewares, handlerFunc, isMulti)
+        res(path, middlewares, handlerFunc, multiMiddlewares)
         Ok()
     } catch {
         | Js.Exn.Error(obj) => Error(Logger.wrap(obj))
+        | _ => Error(Logger.getUnknownError())
     }
 
     let registerSpecial = (
@@ -155,31 +173,31 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         isMultipart: isMultipart,
         routeType: specialRouteType
     ): Result.t<unit, Logger.error> => try {
-        let isMulti = switch(isMultipart) {
-            | Multipart => true
-            | NotMultipart => false
+        let multiMiddlewares: array<unknown> = switch(isMultipart) {
+            | Multipart(fileFields) => 
+                RequestResponseManager.buildMultipartDataMiddleware(fileFields)
+            | NotMultipart => []
         }
         let res: (
             string, 
             array<Controller.middleware>, 
             handlerFunc, 
-            bool, 
+            array<unknown>,
             specialRouteType
         ) => unit = %raw(`
-            function(path, middlewares, handlerFunc, isMulti, routeType) {
-                const middlewares2 = isMulti
-                    ? [multer().none()].concat(middlewares)
-                    : middlewares
+            function(path, middlewares, handlerFunc, multiMiddlewares, route) {
+                const middlewares2 = multiMiddlewares.concat(middlewares)
                 const funParams = [path]
                     .concat(middlewares2)
                     .concat([handlerFunc]);
-                app[routeType](...funParams);
+                app[route](...funParams);
             }
         `)
-        res(path, middlewares, handlerFunc, isMulti, routeType)
+        res(path, middlewares, handlerFunc, multiMiddlewares, routeType)
         Ok()
     } catch {
         | Js.Exn.Error(obj) => Error(Logger.wrap(obj))
+        | _ => Error(Logger.getUnknownError())
     }
     
 
@@ -241,6 +259,7 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         Ok()
     } catch {
         | Js.Exn.Error(obj) => Error(Logger.wrap(obj))
+        | _ => Error(Logger.getUnknownError())
     }
 
     let run = (port: int): Result.t<unit, Logger.error> => {

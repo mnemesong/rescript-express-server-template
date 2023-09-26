@@ -1,10 +1,12 @@
 open ExpressServerTemplate
 
-module ExpressControllerStub: IController = (
-    Logger: ILogger
-) => {
+module type IControllerDependsExpressLoggerStub = 
+    IController with type error = ExpressLoggerStub.ExpressLoggerStub.error
+
+module ExpressControllerStub: IControllerDependsExpressLoggerStub = {
     open Belt
 
+    type error = ExpressLoggerStub .ExpressLoggerStub.error
     type action = {
         t: handlerType,
         path: string,
@@ -22,7 +24,7 @@ module ExpressControllerStub: IController = (
         (a) => a.path
 
     @@warning("-27")
-    let initExpressApp: (unknown) => Result.t<unit, Logger.error> =
+    let initExpressApp: (unknown) => Result.t<unit, error> =
         (u) => Ok()
     @@warning("+27")
 
