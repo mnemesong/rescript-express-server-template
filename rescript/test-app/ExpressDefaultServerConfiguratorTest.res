@@ -1,20 +1,32 @@
 open ExpressServer
 open SimpleLogger
 open ExpressDefaultServerConfigurator
+open Belt
 
 module ExpressDefaultServerConfigurator = 
     ExpressDefaultServerConfiguratorFactory(SimpleLogger)
 
 let formHtml = (method: routeType, path: string) => `
-<h1>Test ${method :> string} form</h1>
 <form action="${path}" method="${method :> string}">
+    <h1>Test ${method :> string} form</h1>
     <input name="textInp" value="" style="display: block;">
     <textarea name="textAr" style="display: block;"></textarea>
     <input type="submit" style="display: block;">
 </form>
 `
 
-let indexPageHtml = formHtml(#get, "/apply-get")
+let printForms = (forms: array<string>): string => `
+<div style="display:grid; grid-template-columns: ${
+    Array.map(forms, (_) => "1fr") -> Js.Array2.joinWith(" ")
+};">
+    ${Js.Array2.joinWith(forms, "")}
+</div>
+`
+
+let indexPageHtml = [
+    formHtml(#get, "/apply-get"),
+    formHtml(#post, "/apply-post")
+] -> printForms
 
 let parseUnknownAsString: (unknown) => option<string> = %raw(`
     function(val) {
@@ -46,6 +58,14 @@ let routes: array<route> = [
         OnlyResponse(Html(indexPageHtml)))),
     (#get, "/apply-get", Default((req) => {
         let reqVals = parseFormValues(req.queryParams)
+        let result = Js.Json.stringifyAny(reqVals)
+        switch result {
+            |Some(a) => OnlyResponse(Json(a))
+            |None => OnlyResponse(Json("{}"))
+        }
+    })),
+    (#post, "/apply-post", Default((req) => {
+        let reqVals = parseFormValues(req.bodyData)
         let result = Js.Json.stringifyAny(reqVals)
         switch result {
             |Some(a) => OnlyResponse(Json(a))

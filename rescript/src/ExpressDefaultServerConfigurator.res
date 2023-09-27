@@ -51,13 +51,13 @@ type handlingResult =
 
 type reqDefault = {
     queryParams: unknown,
-    data: unknown,
+    bodyData: unknown,
     session: unknown,
 }
 
 type reqMultipart = {
     queryParams: unknown,
-    data: unknown,
+    bodyData: unknown,
     session: unknown,
     files: unknown,
 }
@@ -233,7 +233,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                     Logger.catchUnknown(() => {
                         let reqDefault: reqDefault = {
                             queryParams: parseQueryParams(req),
-                            data: parseBodyData(req),
+                            bodyData: parseBodyData(req),
                             session: parseSession(req),
                         }
                         let result = defHandler(reqDefault)
@@ -247,7 +247,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                     Logger.catchUnknown(() => {
                         let reqMult: reqMultipart = {
                             queryParams: parseQueryParams(req),
-                            data: parseBodyData(req),
+                            bodyData: parseBodyData(req),
                             session: parseSession(req),
                             files: parseFiles(req),
                         }
