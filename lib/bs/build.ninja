@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash cbe13c2a933c885c48071bc3e9029c89 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 8a7857f5f068588c6436a920f75bbf8f $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -11,6 +11,9 @@ rule mij
   dyndep = 1
   restat = 1
 o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast
+o rescript\test-app\ExpressDefaultServerConfiguratorTest.ast : astj ..\..\rescript\test-app\ExpressDefaultServerConfiguratorTest.res
+o rescript\test-app\ExpressDefaultServerConfiguratorTest.d : deps rescript\test-app\ExpressDefaultServerConfiguratorTest.ast
+o rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj rescript\test-app\ExpressDefaultServerConfiguratorTest.cmi ..\js\rescript\test-app\ExpressDefaultServerConfiguratorTest.bs.js : mij rescript\test-app\ExpressDefaultServerConfiguratorTest.ast
 o rescript\src\SimpleLogger.ast : astj ..\..\rescript\src\SimpleLogger.res
 o rescript\src\SimpleLogger.d : deps rescript\src\SimpleLogger.ast
 o rescript\src\SimpleLogger.cmj rescript\src\SimpleLogger.cmi ..\js\rescript\src\SimpleLogger.bs.js : mij rescript\src\SimpleLogger.ast

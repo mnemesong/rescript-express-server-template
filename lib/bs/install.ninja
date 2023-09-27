@@ -7,6 +7,10 @@ o ExpressServerTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTest.cmi
 o ExpressServerTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTest.cmj
 o ExpressServerTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTest.cmt
 o ExpressServerTest.res : cp ..\..\rescript\test-app\ExpressServerTest.res
+o ExpressDefaultServerConfiguratorTest.cmi : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmi
+o ExpressDefaultServerConfiguratorTest.cmj : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj
+o ExpressDefaultServerConfiguratorTest.cmt : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmt
+o ExpressDefaultServerConfiguratorTest.res : cp ..\..\rescript\test-app\ExpressDefaultServerConfiguratorTest.res
 o SimpleLogger.cmi : cp ..\bs\rescript\src\SimpleLogger.cmi
 o SimpleLogger.cmj : cp ..\bs\rescript\src\SimpleLogger.cmj
 o SimpleLogger.cmt : cp ..\bs\rescript\src\SimpleLogger.cmt
@@ -27,4 +31,4 @@ o ExpressDefaultServerConfigurator.cmi : cp ..\bs\rescript\src\ExpressDefaultSer
 o ExpressDefaultServerConfigurator.cmj : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmj
 o ExpressDefaultServerConfigurator.cmt : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmt
 o ExpressDefaultServerConfigurator.res : cp ..\..\rescript\src\ExpressDefaultServerConfigurator.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 

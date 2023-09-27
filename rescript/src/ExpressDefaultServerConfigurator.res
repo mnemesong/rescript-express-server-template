@@ -2,6 +2,7 @@ open ExpressServer
 
 %%raw(`
     const multer = require("multer");
+    const express = require("express")
 `)
 
 type serverEffect = 
@@ -44,10 +45,9 @@ type serverRespType =
     | Redirect(string, redirectStatus)
     | Error(string, errorStatus)
 
-type handlingResult = {
-    resp: serverRespType,
-    effects: array<serverEffect>
-}
+type handlingResult = 
+    | OnlyResponse(serverRespType)
+    | ResponseWithEffects(serverRespType, array<serverEffect>)
 
 type reqDefault = {
     queryParams: unknown,
@@ -87,7 +87,7 @@ module type IExpressDefaultServerConfigurator = {
 module type IExpressDefaultServerConfiguratorFactory = (Logger: ILogger) =>
     IExpressDefaultServerConfigurator
 
-module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactory = 
+module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfiguratorFactory = 
     (Logger: ILogger) => 
 {
     open Belt
@@ -96,7 +96,7 @@ module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactor
 
     let parseQueryParams: (unknown) => unknown = %raw(`
         function(req) {
-            return req.query ? JSON.parse(JSON.stringify(req)) : {};
+            return req.query ? JSON.parse(JSON.stringify(req.query)) : {};
         }
     `)
 
@@ -178,7 +178,7 @@ module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactor
 
     let handleErrorResp: (unknown, string, errorStatus) => unit = %raw(`
         function(res, msg, status) {
-            res.status(errorStatus).send(msg);
+            res.status(status).send(msg);
         }
     `)
 
@@ -210,6 +210,21 @@ module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactor
             }
         `)
 
+    let applyHandlingResult = 
+        (req: unknown, res:unknown, result: handlingResult) =>
+            switch(result) {
+                | OnlyResponse(resp) => 
+                    handleRespResult(res, resp)
+                | ResponseWithEffects(resp, effects) => {
+                    Array.forEach(effects, (e) => 
+                    switch(handleEffect(e, req)) {
+                        | Ok(_) => ()
+                        | Error(obj) => Logger.raiseError(obj)
+                    })
+                    handleRespResult(res, resp)
+                }
+            }
+
     let routeToHandler = 
         (route: route): handler => {
             let (routeType, path, queryHandling) = route
@@ -222,12 +237,7 @@ module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactor
                             session: parseSession(req),
                         }
                         let result = defHandler(reqDefault)
-                        Array.forEach(result.effects, (e) => 
-                            switch(handleEffect(e, req)) {
-                                | Ok(_) => ()
-                                | Error(obj) => Logger.raiseError(obj)
-                            })
-                        handleRespResult(res, result.resp)
+                        applyHandlingResult(req, res, result)
                     }) -> Logger.handleResultError( (err) => {
                         Logger.logError(err)
                         handleErrorResp(res, "Internal error", #500)
@@ -242,12 +252,7 @@ module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactor
                             files: parseFiles(req),
                         }
                         let result = multipartHandler(reqMult)
-                        Array.forEach(result.effects, (e) => 
-                            switch(handleEffect(e, req)) {
-                                | Ok(_) => ()
-                                | Error(obj) => Logger.raiseError(obj)
-                            })
-                        handleRespResult(res, result.resp)
+                        applyHandlingResult(req, res, result)
                     }) -> Logger.handleResultError( (err) => {
                         Logger.logError(err)
                         handleErrorResp(res, "Internal error", #500)
