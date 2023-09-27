@@ -88,7 +88,8 @@ module type IExpressDefaultServerConfiguratorFactory = (Logger: ILogger) =>
     IExpressDefaultServerConfigurator
 
 module ExpressDefaultServerConfigurator: IExpressDefaultServerConfiguratorFactory = 
-    (Logger: ILogger) => {
+    (Logger: ILogger) => 
+{
     open Belt
 
     type error = Logger.error
