@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash cd7c40836474158e2f1942d6c1b3cb70 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash cbe13c2a933c885c48071bc3e9029c89 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -23,3 +23,6 @@ o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi 
 o rescript\src\ExpressDefaultController.ast : astj ..\..\rescript\src\ExpressDefaultController.res
 o rescript\src\ExpressDefaultController.d : deps rescript\src\ExpressDefaultController.ast
 o rescript\src\ExpressDefaultController.cmj rescript\src\ExpressDefaultController.cmi ..\js\rescript\src\ExpressDefaultController.bs.js : mij rescript\src\ExpressDefaultController.ast
+o rescript\src\ExpressDefaultServerConfigurator.ast : astj ..\..\rescript\src\ExpressDefaultServerConfigurator.res
+o rescript\src\ExpressDefaultServerConfigurator.d : deps rescript\src\ExpressDefaultServerConfigurator.ast
+o rescript\src\ExpressDefaultServerConfigurator.cmj rescript\src\ExpressDefaultServerConfigurator.cmi ..\js\rescript\src\ExpressDefaultServerConfigurator.bs.js : mij rescript\src\ExpressDefaultServerConfigurator.ast

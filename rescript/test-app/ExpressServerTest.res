@@ -13,7 +13,7 @@ let indexHandler: (unknown, unknown) => unit =
 let onInit: () => unit = 
     () => Js.Console.log("Server works")
 
-switch ExpressServerTest.run({
+ExpressServerTest.run({
     handlers: [{
         path: "/",
         routeType: #get,
@@ -23,7 +23,4 @@ switch ExpressServerTest.run({
     appMwInits: [],
     port: 80,
     onInit: onInit
-}) {
-    | Ok() => ()
-    | Error(obj) => Js.Console.log(obj)
-}
+})

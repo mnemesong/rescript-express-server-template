@@ -1,8 +1,6 @@
 %%raw(`
 const express = require("express")
 const app = express();
-app.use(express.urlencoded())
-app.use(express.json())
 `)
 
 let appUnit: unknown = %raw(`app`)
@@ -57,12 +55,16 @@ module type ILogger = {
     type error
 
     let catchUnknown: (() => 'a) => result<'a, error>
+    let logError: (error) => unit
+    let mapResultError: (result<unit, error>) => unit
+    let handleResultError: (result<unit, error>, (error) => unit) => unit
+    let raiseError: (error) => unit
 }
 
 module type IExpressServer = {
     type error
 
-    let run: (serverStartConfig) => result<unit, error>
+    let run: (serverStartConfig) => unit
 }
 
 module type IExpressServerFactory = (Logger: ILogger) =>
@@ -94,7 +96,7 @@ module ExpressServerFactory: IExpressServerFactory = (Logger: ILogger) => {
         }
 
     let run =
-        (serverStartConfig: serverStartConfig): result<unit, error> => 
+        (serverStartConfig: serverStartConfig): unit => 
             Logger.catchUnknown(() => {
                 Array.forEach(
                     serverStartConfig.appMwInits, 
@@ -110,5 +112,5 @@ module ExpressServerFactory: IExpressServerFactory = (Logger: ILogger) => {
                     }
                 `)
                 start(serverStartConfig.port, serverStartConfig.onInit)
-            })
+            }) -> Logger.mapResultError
 }

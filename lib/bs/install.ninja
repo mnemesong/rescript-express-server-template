@@ -23,4 +23,8 @@ o ExpressDefaultController.cmi : cp ..\bs\rescript\src\ExpressDefaultController.
 o ExpressDefaultController.cmj : cp ..\bs\rescript\src\ExpressDefaultController.cmj
 o ExpressDefaultController.cmt : cp ..\bs\rescript\src\ExpressDefaultController.cmt
 o ExpressDefaultController.res : cp ..\..\rescript\src\ExpressDefaultController.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj 
+o ExpressDefaultServerConfigurator.cmi : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmi
+o ExpressDefaultServerConfigurator.cmj : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmj
+o ExpressDefaultServerConfigurator.cmt : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmt
+o ExpressDefaultServerConfigurator.res : cp ..\..\rescript\src\ExpressDefaultServerConfigurator.res
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 
