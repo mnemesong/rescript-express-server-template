@@ -15,6 +15,15 @@ let formHtml = (method: routeType, path: string) => `
 </form>
 `
 
+let fileForm = (method: routeType, path: string) => `
+<form action="${path}" method="${method :> string}" enctype="multipart/form-data">
+    <h1>Test multipart form</h1>
+    <input name="textInp" value="" style="display: block;">
+    <input type="file" name="fileInp" style="display: block;">
+    <input type="submit" style="display: block;">
+</form>
+`
+
 let printForms = (forms: array<string>): string => `
 <div style="display:grid; grid-template-columns: ${
     Array.map(forms, (_) => "1fr") -> Js.Array2.joinWith(" ")
@@ -25,7 +34,8 @@ let printForms = (forms: array<string>): string => `
 
 let indexPageHtml = [
     formHtml(#get, "/apply-get"),
-    formHtml(#post, "/apply-post")
+    formHtml(#post, "/apply-post"),
+    fileForm(#post, "/apply-file")
 ] -> printForms
 
 let parseUnknownAsString: (unknown) => option<string> = %raw(`
@@ -40,6 +50,22 @@ let parseUnknownObjectProperty: (unknown, string, (unknown) => option<'a>) => op
 %raw(`
     function(obj, prop, parser) {
         return (obj[prop]) ? parser(obj[prop]) : null;
+    }
+`)
+
+let parseUnknownAsFile: (unknown) => option<string> = %raw(`
+    function (val) {
+        console.log(val);
+        return null;
+    }
+`)
+
+let parseUnknownAsArray: (unknown, (unknown) => option<'a>) => option<array<option<'a>>> =
+%raw(`
+    function(arr, parser) {
+        return Array.isArray(arr)
+            ? arr.map(parser)
+            : null;
     }
 `)
 
@@ -71,7 +97,20 @@ let routes: array<route> = [
             |Some(a) => OnlyResponse(Json(a))
             |None => OnlyResponse(Json("{}"))
         }
-    }))
+    })),
+    (#post, "/apply-file", Multipart((req) => {
+        let reqVals = ({
+            "textInp": parseUnknownObjectProperty(req.bodyData, "textInp", parseUnknownAsString),
+            "fileInp": parseUnknownObjectProperty(req.files, "fileInp", (a) => 
+                parseUnknownAsArray(a, (u) => 
+                    parseUnknownObjectProperty(u, "originalname", parseUnknownAsString)))
+        })
+        let result = Js.Json.stringifyAny(reqVals)
+        switch result {
+            |Some(a) => OnlyResponse(Json(a))
+            |None => OnlyResponse(Json("{}"))
+        }
+    }, Files("/uploads", [("fileInp", 1)])))
 ]
 
 let serverConfig = ExpressDefaultServerConfigurator.buildConfig(routes, 80, () => {

@@ -80,6 +80,17 @@ type route = (routeType, path, queryHandling)
 
 type port = int
 
+type file = {
+    fieldname: string,
+    originalname: string,
+    encoding: string,
+    mimetype: string,
+    destination: string,
+    filename: string,
+    path: string,
+    size: int
+}
+
 module type IExpressDefaultServerConfigurator = {
     let buildConfig: (array<route>, port, () => unit) => serverStartConfig
 }
@@ -195,7 +206,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
     let produceMulterFilesMiddleware: 
         (string, array<fileField>) => middleware = %raw(`
             function(path, fileFields) {
-                const fields = fileField.map(ff => ({
+                const fields = fileFields.map(ff => ({
                     name: ff[0],
                     maxCount: ff[1]
                 }));
