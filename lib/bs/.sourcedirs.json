@@ -1,1 +1,1 @@
-{ "dirs" : [ "rescript" , "rescript\\test-app" , "rescript\\stubs" , "rescript\\src" ] , "pkgs" : [] , "generated" : [] }
+{ "dirs" : [ "rescript" , "rescript\\test-app" , "rescript\\src" ] , "pkgs" : [] , "generated" : [] }

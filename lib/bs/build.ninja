@@ -1,25 +1,22 @@
 rescript = 1
 rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
-o rescript\test-app\ExpressServerTemplateTest.ast : astj ..\..\rescript\test-app\ExpressServerTemplateTest.res
+o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 615ca124268fc0722e58458c7b6cf9ec $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash cd7c40836474158e2f1942d6c1b3cb70 $in
   restat = 1
-o rescript\test-app\ExpressServerTemplateTest.d : deps rescript\test-app\ExpressServerTemplateTest.ast
+o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\stubs" -I "rescript\test-app" -I rescript   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js $i
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js $i
   dyndep = 1
   restat = 1
-o rescript\test-app\ExpressServerTemplateTest.cmj rescript\test-app\ExpressServerTemplateTest.cmi ..\js\rescript\test-app\ExpressServerTemplateTest.bs.js : mij rescript\test-app\ExpressServerTemplateTest.ast
-o rescript\stubs\ExpressLoggerStub.ast : astj ..\..\rescript\stubs\ExpressLoggerStub.res
-o rescript\stubs\ExpressLoggerStub.d : deps rescript\stubs\ExpressLoggerStub.ast
-o rescript\stubs\ExpressLoggerStub.cmj rescript\stubs\ExpressLoggerStub.cmi ..\js\rescript\stubs\ExpressLoggerStub.bs.js : mij rescript\stubs\ExpressLoggerStub.ast
-o rescript\stubs\ExpressControllerStub.ast : astj ..\..\rescript\stubs\ExpressControllerStub.res
-o rescript\stubs\ExpressControllerStub.d : deps rescript\stubs\ExpressControllerStub.ast
-o rescript\stubs\ExpressControllerStub.cmj rescript\stubs\ExpressControllerStub.cmi ..\js\rescript\stubs\ExpressControllerStub.bs.js : mij rescript\stubs\ExpressControllerStub.ast
-o rescript\stubs\ExpressRequestResponseManagerStub.ast : astj ..\..\rescript\stubs\ExpressRequestResponseManagerStub.res
-o rescript\stubs\ExpressRequestResponseManagerStub.d : deps rescript\stubs\ExpressRequestResponseManagerStub.ast
-o rescript\stubs\ExpressRequestResponseManagerStub.cmj rescript\stubs\ExpressRequestResponseManagerStub.cmi ..\js\rescript\stubs\ExpressRequestResponseManagerStub.bs.js : mij rescript\stubs\ExpressRequestResponseManagerStub.ast
+o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast
+o rescript\src\SimpleLogger.ast : astj ..\..\rescript\src\SimpleLogger.res
+o rescript\src\SimpleLogger.d : deps rescript\src\SimpleLogger.ast
+o rescript\src\SimpleLogger.cmj rescript\src\SimpleLogger.cmi ..\js\rescript\src\SimpleLogger.bs.js : mij rescript\src\SimpleLogger.ast
+o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
+o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
+o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
 o rescript\src\ExpressServerTemplate.ast : astj ..\..\rescript\src\ExpressServerTemplate.res
 o rescript\src\ExpressServerTemplate.d : deps rescript\src\ExpressServerTemplate.ast
 o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi ..\js\rescript\src\ExpressServerTemplate.bs.js : mij rescript\src\ExpressServerTemplate.ast

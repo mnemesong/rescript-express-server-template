@@ -6,7 +6,7 @@
   "scripts": {
     "res:build": "rescript",
     "res:dev": "rescript build -w",
-    "server:stub": "node ./lib/js/rescript/test-app/ExpressServerTemplateTest.bs"
+    "test:server": "node ./lib/js/rescript/test-app/ExpressServerTest.bs"
   },
   "repository": {
     "type": "git",

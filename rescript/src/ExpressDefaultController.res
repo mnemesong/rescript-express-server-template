@@ -7,10 +7,12 @@ module type ILoggerAdv = {
     let getUnknownErrorInRoute: (string) => error
     let userIsNotGuestError: error
     let accessDeniedForUserError: error
+    let userIsNotLoggedInError: error
 }
 
 
 module type IRbacManager = {
+    type request
     type permission
     type user
     type permissionStrategy =
@@ -21,6 +23,7 @@ module type IRbacManager = {
 
     let getPermissions: (user) => array<permission>
     let isPermissionsEq: (permission, permission) => bool
+    let getUser: (request) => option<user>
 }
 
 
@@ -39,37 +42,35 @@ module type IRequestResponseManagerAdv = {
 
     type data
     type request
-    type user
     type responseEffect
     type file
 
     let parseRequest: (unknown) => result<request, error>
     let applyResponseEffects: (unknown, array<responseEffect>) => result<unit, error>
-    let getUser: (request) => option<user>
     let getData: (request) => data
-    let getFiles: (unknown, fileAwaitingField) => array<file>
+    let getFiles: (request, fileAwaitingField) => array<file>
 }
 
 
 module type IExpressDefaultControllerFactory = (
     Logger: ILoggerAdv,
-    RbacManager: IRbacManager,
     DefaultPagesStrategy: IDefaultPagesStrategy 
         with type error = Logger.error,
     RequestResponseManager : IRequestResponseManagerAdv 
-        with type user = RbacManager.user 
-        and type error = Logger.error
+        with type error = Logger.error,
+    RbacManager: IRbacManager
+        with type request = RequestResponseManager.request,
 ) => IController
 
 
 module ExpressDefaultControllerFactory: IExpressDefaultControllerFactory = (
     Logger: ILoggerAdv,
-    RbacManager: IRbacManager,
     DefaultPagesStrategy: IDefaultPagesStrategy 
         with type error = Logger.error,
     RequestResponseManager : IRequestResponseManagerAdv 
-        with type user = RbacManager.user 
-        and type error = Logger.error
+        with type error = Logger.error,
+    RbacManager: IRbacManager
+        with type request = RequestResponseManager.request,
 ) => {
     open Belt
 
@@ -105,7 +106,7 @@ module ExpressDefaultControllerFactory: IExpressDefaultControllerFactory = (
 
     let checkAccess: (permStrat, request) => result<request, error> = 
         ( permStrat, request ) => {
-            let user = RequestResponseManager.getUser(request)
+            let user = RbacManager.getUser(request)
             switch(permStrat) {
                 | Any => Ok(request)
                 | OnlyGuest => switch(user) {
@@ -122,10 +123,10 @@ module ExpressDefaultControllerFactory: IExpressDefaultControllerFactory = (
                             ? Error(Logger.accessDeniedForUserError)
                             : Ok(request)
                     }
-                    | None => Error(Logger.userIsNotGuestError)
+                    | None => Error(Logger.userIsNotLoggedInError)
                 }
                 | OnlyWithPermission(needPerms) => switch(user) {
-                    | None => Error(Logger.userIsNotGuestError)
+                    | None => Error(Logger.userIsNotLoggedInError)
                     | Some(u) => {
                         let isIntersects = isPermissionsIntersect(
                             RbacManager.getPermissions(u),
@@ -187,65 +188,5 @@ module ExpressDefaultControllerFactory: IExpressDefaultControllerFactory = (
 
     let getAllActions: () => array<action> =
         () => actionsCollection.contents
-
-    let regGetRoute:
-        (string, permStrat, (request) => handleResult) => unit =
-        (path, permissionStrategy, reqHandle) => {
-            actionsCollection := Array.concat(actionsCollection.contents, [{
-                t: Get,
-                path: path,
-                func: reqHandle,
-                permStrat: permissionStrategy,
-                middlewares: [],
-            }])
-        }
-
-    let regGetRouteWithMw:
-        (string, permStrat, (request) => handleResult, array<middleware>) => unit =
-        (path, permissionStrategy, reqHandle, middlewares) => {
-            actionsCollection := Array.concat(actionsCollection.contents, [{
-                t: Get,
-                path: path,
-                func: reqHandle,
-                permStrat: permissionStrategy,
-                middlewares: middlewares,
-            }])
-        }
-
-    let regPostRoute:
-        (string, permStrat, (request) => handleResult) => unit =
-        (path, permissionStrategy, reqHandle) => {
-            actionsCollection := Array.concat(actionsCollection.contents, [{
-                t: Post(NotMultipart),
-                path: path,
-                func: reqHandle,
-                permStrat: permissionStrategy,
-                middlewares: [],
-            }])
-        }
-
-    let regPostRouteWithMw:
-        (string, permStrat, (request) => handleResult,array<middleware>) => unit =
-        (path, permissionStrategy, reqHandle, middlewares) => {
-            actionsCollection := Array.concat(actionsCollection.contents, [{
-                t: Post(NotMultipart),
-                path: path,
-                func: reqHandle,
-                permStrat: permissionStrategy,
-                middlewares: middlewares,
-            }])
-        }
-
-    let regPostMultipartRoute: 
-        (string, permStrat, (request) => handleResult, array<fileAwaitingField>) => unit =
-        (path, permissionStrategy, reqHandle, fileFields) => {
-            actionsCollection := Array.concat(actionsCollection.contents, [{
-                t: Post(Multipart(fileFields)),
-                path: path,
-                func: reqHandle,
-                permStrat: permissionStrategy,
-                middlewares: [],
-            }])
-        }
 
 }

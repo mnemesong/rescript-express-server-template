@@ -132,8 +132,6 @@ module ExpressServerTemplate: IExpressServerTemplate = (
         | _ => Error(Logger.getUnknownError())
     }
 
-    
-
     let registerPost = (
         path: string,
         middlewares: array<Controller.middleware>, 

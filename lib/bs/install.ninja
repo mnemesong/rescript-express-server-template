@@ -3,22 +3,18 @@ rule cp
   command = cmd.exe /C copy /Y $i $out >NUL
 rule touch
  command = cmd.exe /C type nul >>$out & copy $out+,, >NUL
-o ExpressServerTemplateTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmi
-o ExpressServerTemplateTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmj
-o ExpressServerTemplateTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmt
-o ExpressServerTemplateTest.res : cp ..\..\rescript\test-app\ExpressServerTemplateTest.res
-o ExpressLoggerStub.cmi : cp ..\bs\rescript\stubs\ExpressLoggerStub.cmi
-o ExpressLoggerStub.cmj : cp ..\bs\rescript\stubs\ExpressLoggerStub.cmj
-o ExpressLoggerStub.cmt : cp ..\bs\rescript\stubs\ExpressLoggerStub.cmt
-o ExpressLoggerStub.res : cp ..\..\rescript\stubs\ExpressLoggerStub.res
-o ExpressControllerStub.cmi : cp ..\bs\rescript\stubs\ExpressControllerStub.cmi
-o ExpressControllerStub.cmj : cp ..\bs\rescript\stubs\ExpressControllerStub.cmj
-o ExpressControllerStub.cmt : cp ..\bs\rescript\stubs\ExpressControllerStub.cmt
-o ExpressControllerStub.res : cp ..\..\rescript\stubs\ExpressControllerStub.res
-o ExpressRequestResponseManagerStub.cmi : cp ..\bs\rescript\stubs\ExpressRequestResponseManagerStub.cmi
-o ExpressRequestResponseManagerStub.cmj : cp ..\bs\rescript\stubs\ExpressRequestResponseManagerStub.cmj
-o ExpressRequestResponseManagerStub.cmt : cp ..\bs\rescript\stubs\ExpressRequestResponseManagerStub.cmt
-o ExpressRequestResponseManagerStub.res : cp ..\..\rescript\stubs\ExpressRequestResponseManagerStub.res
+o ExpressServerTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTest.cmi
+o ExpressServerTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTest.cmj
+o ExpressServerTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTest.cmt
+o ExpressServerTest.res : cp ..\..\rescript\test-app\ExpressServerTest.res
+o SimpleLogger.cmi : cp ..\bs\rescript\src\SimpleLogger.cmi
+o SimpleLogger.cmj : cp ..\bs\rescript\src\SimpleLogger.cmj
+o SimpleLogger.cmt : cp ..\bs\rescript\src\SimpleLogger.cmt
+o SimpleLogger.res : cp ..\..\rescript\src\SimpleLogger.res
+o ExpressServer.cmi : cp ..\bs\rescript\src\ExpressServer.cmi
+o ExpressServer.cmj : cp ..\bs\rescript\src\ExpressServer.cmj
+o ExpressServer.cmt : cp ..\bs\rescript\src\ExpressServer.cmt
+o ExpressServer.res : cp ..\..\rescript\src\ExpressServer.res
 o ExpressServerTemplate.cmi : cp ..\bs\rescript\src\ExpressServerTemplate.cmi
 o ExpressServerTemplate.cmj : cp ..\bs\rescript\src\ExpressServerTemplate.cmj
 o ExpressServerTemplate.cmt : cp ..\bs\rescript\src\ExpressServerTemplate.cmt
@@ -27,4 +23,4 @@ o ExpressDefaultController.cmi : cp ..\bs\rescript\src\ExpressDefaultController.
 o ExpressDefaultController.cmj : cp ..\bs\rescript\src\ExpressDefaultController.cmj
 o ExpressDefaultController.cmt : cp ..\bs\rescript\src\ExpressDefaultController.cmt
 o ExpressDefaultController.res : cp ..\..\rescript\src\ExpressDefaultController.res
-build install.stamp : touch ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressLoggerStub.cmi ExpressLoggerStub.cmj ExpressControllerStub.cmi ExpressControllerStub.cmj ExpressRequestResponseManagerStub.cmi ExpressRequestResponseManagerStub.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultController.cmi ExpressDefaultController.cmj 
