@@ -1,8 +1,5 @@
 open ExpressServer
 
-type serverEffect = 
-    | DestroySession
-    | SetSessionVal(string, unknown)
 
 type redirectStatus = 
     [ #301 
@@ -39,9 +36,9 @@ type serverRespType =
     | Redirect(string, redirectStatus)
     | Error(string, errorStatus)
 
-type handlingResult = 
+type handlingResult<'a> = 
     | OnlyResponse(serverRespType)
-    | ResponseWithEffects(serverRespType, array<serverEffect>)
+    | ResponseWithEffects(serverRespType, array<'a>)
 
 type path = string
 
@@ -58,8 +55,6 @@ type file = {
     size: int
 }
 
-type handlingResultProduce = (unknown, unknown) => handlingResult
-
 type route<'a> = Route(routeType, path, 'a)
 
 module type IExpressDefaultServerConfigurator = {
@@ -72,11 +67,14 @@ module type IExpressDefaultServerConfigurator = {
 
 module type IExpressRequestManager = {
     type requestHandling
+    type requestEffect
     type error
 
     let initMiddlewares: (unknown) => unit
-    let handleRequest: (requestHandling) => (unknown, unknown) => handlingResult
+    let handleRequest: 
+        (requestHandling) => (unknown, unknown) => handlingResult<requestEffect>
     let produceMiddlewares: (requestHandling) => array<middleware>
+    let handleEffect: (requestEffect, unknown, unknown) => unit
 }
 
 module type IExpressDefaultServerConfiguratorFactory = (
@@ -92,46 +90,15 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
 ) => {
     open Belt
 
-    type error = Logger.error
     type requestHandling = RequestManager.requestHandling
     type route = route<requestHandling>
+    type requestEffect = RequestManager.requestEffect
 
     let route = (
         routeType: routeType, 
         path: path, 
         handling: requestHandling
     ): route => Route(routeType, path, handling)
-
-    let handleDestroySession =
-        (req: unknown): result<unit, error> => 
-            Logger.catchUnknown(() => {
-                let f: (unknown) => unit = %raw(`
-                    function(req) {
-                        req.session.destroy((e) => {
-                            console.log("Session destory erorr: ", e);
-                        });
-                    }
-                `)
-                f(req)
-            })
-
-    let handleSetSessionVal = 
-        (req: unknown, name: string, val: 'a): result<unit, error> =>
-            Logger.catchUnknown(() => {
-                let f: (unknown, string, 'a) => unit = %raw(`
-                    function(req, name, val) {
-                        req.session[name] = val;
-                    }
-                `)
-                f(req, name, val)
-            })
-
-    let handleEffect = 
-        (se: serverEffect, req: unknown): result<unit, error> => 
-            switch(se) {
-                | DestroySession => handleDestroySession(req)
-                | SetSessionVal(name, val) => handleSetSessionVal(req, name, val)
-            }
 
     let handleHtmlResp: (unknown, string) => unit = %raw(`
         function(res, html) {
@@ -183,15 +150,12 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
             }
 
     let applyHandlingResult = 
-        (req: unknown, res:unknown, result: handlingResult) =>
+        (req: unknown, res:unknown, result: handlingResult<requestEffect>) =>
             switch(result) {
                 | OnlyResponse(resp) => 
                     handleRespResult(res, resp)
                 | ResponseWithEffects(resp, effects) => {
-                    Array.forEach(effects, (e) => switch(handleEffect(e, req)) {
-                        | Ok(_) => ()
-                        | Error(obj) => Logger.raiseError(obj)
-                    })
+                    Array.forEach(effects, (e) => RequestManager.handleEffect(e, req, res))
                     handleRespResult(res, resp)
                 }
             }

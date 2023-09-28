@@ -28,20 +28,26 @@ type filesHandlingConfig =
     | None
     | Files(filesDestinationPath, array<fileField>)
 
-type reqHandling = 
-    | Multipart(reqMultipart => handlingResult, filesHandlingConfig)
-    | Default(reqDefault => handlingResult)
+type requestEffect = 
+    | DestroySession
+    | SetSessionVal(string, unknown)
+
+type requestHandling<'a> = 
+    | Multipart(reqMultipart => handlingResult<'a>, filesHandlingConfig)
+    | Default(reqDefault => handlingResult<'a>)
 
 module type IExpressDefaultRequestManagerFactory = (Logger: ILogger) =>
     IExpressRequestManager 
         with type error = Logger.error
-        and type requestHandling = reqHandling 
+        and type requestHandling = requestHandling<requestEffect>
+        and type requestEffect = requestEffect
 
 module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory = 
     (Logger: ILogger) => 
 {
     type error = Logger.error
-    type requestHandling = reqHandling
+    type requestEffect = requestEffect
+    type requestHandling = requestHandling<requestEffect>
 
     let parseQueryParams: (unknown) => unknown = %raw(`
         function(req) {
@@ -98,7 +104,7 @@ module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory
         `)
 
     let handleRequest: 
-        (requestHandling) => (unknown, unknown) => handlingResult =
+        (requestHandling) => (unknown, unknown) => handlingResult<requestEffect> =
         (requestHandling) => switch(requestHandling) {
             | Default(defHandler) => (req: unknown, _) => {
                 let reqDefault: reqDefault = {
@@ -133,4 +139,31 @@ module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory
                     ]
                 }
         }
+
+    let handleDestroySession = (req: unknown): unit => {
+        let f: (unknown) => unit = %raw(`
+            function(req) {
+                req.session.destroy((e) => {
+                    console.log("Session destory erorr: ", e);
+                });
+            }
+        `)
+        f(req)
+    }
+
+    let handleSetSessionVal =  (req: unknown, name: string, val: 'a): unit => {
+        let f: (unknown, string, 'a) => unit = %raw(`
+            function(req, name, val) {
+                req.session[name] = val;
+            }
+        `)
+        f(req, name, val)
+    }
+
+    let handleEffect = 
+        (re: requestEffect, req: unknown, _): unit => 
+            switch(re) {
+                | DestroySession => handleDestroySession(req)
+                | SetSessionVal(name, val) => handleSetSessionVal(req, name, val)
+            }
 }
