@@ -41,7 +41,8 @@ type errorStatus =
 type serverRespType = 
     | Html(string)
     | Json(string)
-    | File(string)
+    | OpenFile(string)
+    | DownloadFile(string)
     | Redirect(string, redirectStatus)
     | Error(string, errorStatus)
 
@@ -174,10 +175,15 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
         }
     `)
 
-    let handleFileResp: (unknown, string) => unit = %raw(`
+    let handleOpenFileResp: (unknown, string) => unit = %raw(`
         function(res, filePath) {
-            res.setHeader('content-type', 'application/json');
             res.sendFile(filePath);
+        }
+    `)
+
+    let handleDownloadFileResp: (unknown, string) => unit = %raw(`
+        function(res, filePath) {
+            res.download(filePath);
         }
     `)
 
@@ -198,7 +204,8 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
             switch(response) {
                 | Html(html) => handleHtmlResp(res, html)
                 | Json(json) => handleJsonResp(res, json)
-                | File(path) => handleFileResp(res, path)
+                | OpenFile(path) => handleOpenFileResp(res, path)
+                | DownloadFile(path) => handleDownloadFileResp(res, path)
                 | Redirect(url, status) => hanleRedirectResp(res, url, status)
                 | Error(msg, status) => handleErrorResp(res, msg, status)
             }

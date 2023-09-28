@@ -24,6 +24,17 @@ let fileForm = (method: routeType, path: string) => `
 </form>
 `
 
+let testButtons = `
+<div>
+    <button type="button" onclick="window.open('/open-file');">open file</button>
+    <button type="button" onclick="window.open('/download-file');">download file</button>
+</div>
+`
+
+let testFilePath: string = %raw(`
+    require('path').resolve(module.path, '..', '..', '..', '..', 'resources', 'test-file.txt')
+`)
+
 let printForms = (forms: array<string>): string => `
 <div style="display:grid; grid-template-columns: ${
     Array.map(forms, (_) => "1fr") -> Js.Array2.joinWith(" ")
@@ -32,10 +43,12 @@ let printForms = (forms: array<string>): string => `
 </div>
 `
 
+
 let indexPageHtml = [
     formHtml(#get, "/apply-get"),
     formHtml(#post, "/apply-post"),
-    fileForm(#post, "/apply-file")
+    fileForm(#post, "/apply-file"),
+    testButtons
 ] -> printForms
 
 let parseUnknownAsString: (unknown) => option<string> = %raw(`
@@ -110,7 +123,13 @@ let routes: array<route> = [
             |Some(a) => OnlyResponse(Json(a))
             |None => OnlyResponse(Json("{}"))
         }
-    }, Files("/uploads", [("fileInp", 1)])))
+    }, Files("/uploads", [("fileInp", 1)]))),
+    (#get, "/open-file", Default((_) => {
+        OnlyResponse(OpenFile(testFilePath))
+    })),
+    (#get, "/download-file", Default((_) => {
+        OnlyResponse(DownloadFile(testFilePath))
+    }))
 ]
 
 let serverConfig = ExpressDefaultServerConfigurator.buildConfig(routes, 80, () => {
