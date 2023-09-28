@@ -2,7 +2,8 @@ open ExpressServer
 
 %%raw(`
     const multer = require("multer");
-    const express = require("express")
+    const express = require("express");
+    const session = require('express-session');
 `)
 
 type serverEffect = 
@@ -126,7 +127,9 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
 
     let parseSession: (unknown) => unknown = %raw(`
         function(req) {
-            return req.session ? JSON.parse(JSON.stringify(req.session)) : {};
+            const result = {};
+            Object.keys(req.session).forEach(k => {result[k] = req.session[k]});
+            return req.session ? JSON.parse(JSON.stringify(result)) : {};
         }
     `)
 
@@ -234,8 +237,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                 | OnlyResponse(resp) => 
                     handleRespResult(res, resp)
                 | ResponseWithEffects(resp, effects) => {
-                    Array.forEach(effects, (e) => 
-                    switch(handleEffect(e, req)) {
+                    Array.forEach(effects, (e) => switch(handleEffect(e, req)) {
                         | Ok(_) => ()
                         | Error(obj) => Logger.raiseError(obj)
                     })
@@ -302,6 +304,9 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
         function(app) {
             app.use(express.urlencoded({ extended: true }));
             app.use(express.json());
+            app.use(session({
+              secret: 'sha7d87asb78d',
+            }))
         }
     `)
 

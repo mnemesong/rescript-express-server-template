@@ -28,6 +28,8 @@ let testButtons = `
 <div>
     <button type="button" onclick="window.open('/open-file');">open file</button>
     <button type="button" onclick="window.open('/download-file');">download file</button>
+    <button type="button" onclick="window.open('/set-session');">set session</button>
+    <button type="button" onclick="window.open('/delete-session');">delete session</button>
 </div>
 `
 
@@ -129,7 +131,27 @@ let routes: array<route> = [
     })),
     (#get, "/download-file", Default((_) => {
         OnlyResponse(DownloadFile(testFilePath))
-    }))
+    })),
+    (#get, "/show-session", Default((req) => {
+        let sessionVal = parseUnknownObjectProperty(req.session, "sessionVal", parseUnknownAsString)
+        let printVal = switch(sessionVal) {
+            | Some(v) => v
+            | None => ""
+        }
+        OnlyResponse(Html("Session-val: " ++ printVal))
+    })),
+    (#get, "/set-session", Default((_) => {
+        ResponseWithEffects(
+            Redirect("/show-session", #303),
+            [SetSessionVal("sessionVal", %raw(`"11"`))]
+        )
+    })),
+    (#get, "/delete-session", Default((_) => {
+        ResponseWithEffects(
+            Redirect("/show-session", #303),
+            [DestroySession]
+        )
+    })),
 ]
 
 let serverConfig = ExpressDefaultServerConfigurator.buildConfig(routes, 80, () => {
