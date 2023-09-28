@@ -1,5 +1,6 @@
 open ExpressServer
 open ExpressDefaultServerConfigurator
+open ExpressDefaultResponseManager
 
 %%raw(`
     const multer = require("multer");
@@ -33,20 +34,32 @@ type requestEffect =
     | SetSessionVal(string, unknown)
 
 type requestHandling<'a> = 
-    | Multipart(reqMultipart => handlingResult<'a>, filesHandlingConfig)
-    | Default(reqDefault => handlingResult<'a>)
+    | Multipart(
+        reqMultipart => handlingResult<serverRespType, effect<'a, responseEffect>>, 
+        filesHandlingConfig
+    )
+    | Default(reqDefault => handlingResult<serverRespType, effect<'a, responseEffect>>)
 
-module type IExpressDefaultRequestManagerFactory = (Logger: ILogger) =>
-    IExpressRequestManager 
-        with type error = Logger.error
-        and type requestHandling = requestHandling<requestEffect>
-        and type requestEffect = requestEffect
+module type IExpressDefaultRequestManagerFactory = (
+    Logger: ILogger
+) => IExpressRequestManager 
+    with type error = Logger.error
+    and type requestEffect = requestEffect
+    and type requestHandling = requestHandling<requestEffect>
+    and type responseType = serverRespType
+    and type responseEffect = responseEffect
 
-module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory = 
-    (Logger: ILogger) => 
-{
+module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory = (
+    Logger: ILogger
+) => {
     type error = Logger.error
     type requestEffect = requestEffect
+    type responseType = serverRespType
+    type responseEffect = responseEffect
+    type handlingResult = handlingResult<
+        responseType, 
+        effect<requestEffect, responseEffect>
+    >
     type requestHandling = requestHandling<requestEffect>
 
     let parseQueryParams: (unknown) => unknown = %raw(`
@@ -104,7 +117,7 @@ module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory
         `)
 
     let handleRequest: 
-        (requestHandling) => (unknown, unknown) => handlingResult<requestEffect> =
+        (requestHandling) => (unknown, unknown) => handlingResult =
         (requestHandling) => switch(requestHandling) {
             | Default(defHandler) => (req: unknown, _) => {
                 let reqDefault: reqDefault = {
@@ -161,7 +174,7 @@ module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory
     }
 
     let handleEffect = 
-        (re: requestEffect, req: unknown, _): unit => 
+        (req: unknown, _, re: requestEffect): unit => 
             switch(re) {
                 | DestroySession => handleDestroySession(req)
                 | SetSessionVal(name, val) => handleSetSessionVal(req, name, val)

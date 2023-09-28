@@ -2,13 +2,18 @@ open ExpressServer
 open SimpleLogger
 open ExpressDefaultServerConfigurator
 open ExpressDefaultRequestManager
+open ExpressDefaultResponseManager
 open Belt
 
 module ExpressDefaultRequestManager = 
     ExpressDefaultRequestManagerFactory(SimpleLogger)
 
 module ExpressDefaultServerConfiguratorTest = 
-    ExpressDefaultServerConfiguratorFactory(SimpleLogger, ExpressDefaultRequestManager)
+    ExpressDefaultServerConfiguratorFactory(
+        SimpleLogger, 
+        ExpressDefaultResponseManager, 
+        ExpressDefaultRequestManager
+    )
 
 let formHtml = (method: routeType, path: string) => `
 <form action="${path}" method="${method :> string}">
@@ -147,13 +152,13 @@ let routes: array<ExpressDefaultServerConfiguratorTest.route> = [
     Route(#get, "/set-session", Default((_) => {
         ResponseWithEffects(
             Redirect("/show-session", #303),
-            [SetSessionVal("sessionVal", %raw(`"11"`))]
+            [RequestEffect(SetSessionVal("sessionVal", %raw(`"11"`)))]
         )
     })),
     Route(#get, "/delete-session", Default((_) => {
         ResponseWithEffects(
             Redirect("/show-session", #303),
-            [DestroySession]
+            [RequestEffect(DestroySession)]
         )
     })),
 ]

@@ -1,45 +1,5 @@
 open ExpressServer
 
-
-type redirectStatus = 
-    [ #301 
-    | #302 
-    | #303 
-    | #304 
-    | #306 
-    | #307 
-    | #308 
-    ]
-
-type errorStatus = 
-    [ #400 
-    | #401 
-    | #402 
-    | #403 
-    | #404 
-    | #405 
-    | #406 
-    | #407 
-    | #408
-    | #500
-    | #501
-    | #502
-    | #503
-    | #504
-    ]
-
-type serverRespType = 
-    | Html(string)
-    | Json(string)
-    | OpenFile(string)
-    | DownloadFile(string)
-    | Redirect(string, redirectStatus)
-    | Error(string, errorStatus)
-
-type handlingResult<'a> = 
-    | OnlyResponse(serverRespType)
-    | ResponseWithEffects(serverRespType, array<'a>)
-
 type path = string
 
 type port = int
@@ -57,6 +17,14 @@ type file = {
 
 type route<'a> = Route(routeType, path, 'a)
 
+type effect<'a, 'b> = 
+    | RequestEffect('a)
+    | ResponseEffect('b)
+
+type handlingResult<'a, 'b> = 
+    | OnlyResponse('a)
+    | ResponseWithEffects('a, array<'b>)
+
 module type IExpressDefaultServerConfigurator = {
     type requestHandling
     type route
@@ -69,30 +37,54 @@ module type IExpressRequestManager = {
     type requestHandling
     type requestEffect
     type error
+    type responseType
+    type responseEffect
 
     let initMiddlewares: (unknown) => unit
     let handleRequest: 
-        (requestHandling) => (unknown, unknown) => handlingResult<requestEffect>
+        (requestHandling) => (unknown, unknown) => handlingResult<
+            responseType, 
+            effect<requestEffect, responseEffect>
+        >
     let produceMiddlewares: (requestHandling) => array<middleware>
-    let handleEffect: (requestEffect, unknown, unknown) => unit
+    let handleEffect: (unknown, unknown, requestEffect) => unit
+}
+
+module type IExpressResponseManager = {
+    type responseType
+    type responseEffect
+
+    let initMiddlewares: (unknown) => unit
+    let handleEffect: (unknown, unknown, responseEffect) => unit
+    let handleResponse: (unknown, responseType) => unit
+    let handleInternalError: (unknown) => unit
 }
 
 module type IExpressDefaultServerConfiguratorFactory = (
     Logger: ILogger, 
-    RequestManager: IExpressRequestManager with type error = Logger.error
+    ResponseManager: IExpressResponseManager,
+    RequestManager: IExpressRequestManager
+        with type error = Logger.error
+        and type responseType = ResponseManager.responseType
+        and type responseEffect = ResponseManager.responseEffect
 ) => IExpressDefaultServerConfigurator 
     with type requestHandling = RequestManager.requestHandling
     and type route = route<RequestManager.requestHandling>
 
 module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfiguratorFactory = (
     Logger: ILogger, 
-    RequestManager: IExpressRequestManager with type error = Logger.error
+    ResponseManager: IExpressResponseManager,
+    RequestManager: IExpressRequestManager
+        with type error = Logger.error
+        and type responseType = ResponseManager.responseType
+        and type responseEffect = ResponseManager.responseEffect
 ) => {
     open Belt
 
     type requestHandling = RequestManager.requestHandling
-    type route = route<requestHandling>
-    type requestEffect = RequestManager.requestEffect
+    type route = route<RequestManager.requestHandling>
+    type effect = effect<RequestManager.requestEffect, ResponseManager.responseEffect>
+    type responseType = ResponseManager.responseType
 
     let route = (
         routeType: routeType, 
@@ -100,63 +92,20 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
         handling: requestHandling
     ): route => Route(routeType, path, handling)
 
-    let handleHtmlResp: (unknown, string) => unit = %raw(`
-        function(res, html) {
-            res.setHeader('content-type', 'text/html');
-            res.send(html);
+    let handleEffect = (req: unknown, res: unknown, e: effect): unit =>
+        switch(e) {
+            | RequestEffect(re) => RequestManager.handleEffect(req, res, re)
+            | ResponseEffect(re) => ResponseManager.handleEffect(req, res, re)
         }
-    `)
-
-    let handleJsonResp: (unknown, string) => unit = %raw(`
-        function(res, json) {
-            res.setHeader('content-type', 'application/json');
-            res.send(json);
-        }
-    `)
-
-    let handleOpenFileResp: (unknown, string) => unit = %raw(`
-        function(res, filePath) {
-            res.sendFile(filePath);
-        }
-    `)
-
-    let handleDownloadFileResp: (unknown, string) => unit = %raw(`
-        function(res, filePath) {
-            res.download(filePath);
-        }
-    `)
-
-    let hanleRedirectResp: (unknown, string, redirectStatus) => unit = %raw(`
-        function(res, redirectPath, redirectStatus) {
-            res.redirect(redirectStatus, redirectPath);
-        }
-    `)
-
-    let handleErrorResp: (unknown, string, errorStatus) => unit = %raw(`
-        function(res, msg, status) {
-            res.status(status).send(msg);
-        }
-    `)
-
-    let handleRespResult =
-        (res: unknown, response: serverRespType): unit =>
-            switch(response) {
-                | Html(html) => handleHtmlResp(res, html)
-                | Json(json) => handleJsonResp(res, json)
-                | OpenFile(path) => handleOpenFileResp(res, path)
-                | DownloadFile(path) => handleDownloadFileResp(res, path)
-                | Redirect(url, status) => hanleRedirectResp(res, url, status)
-                | Error(msg, status) => handleErrorResp(res, msg, status)
-            }
 
     let applyHandlingResult = 
-        (req: unknown, res:unknown, result: handlingResult<requestEffect>) =>
+        (req: unknown, res:unknown, result: handlingResult<responseType, effect>) =>
             switch(result) {
                 | OnlyResponse(resp) => 
-                    handleRespResult(res, resp)
+                    ResponseManager.handleResponse(res, resp)
                 | ResponseWithEffects(resp, effects) => {
-                    Array.forEach(effects, (e) => RequestManager.handleEffect(e, req, res))
-                    handleRespResult(res, resp)
+                    Array.forEach(effects, (e) => handleEffect(req, res, e))
+                    ResponseManager.handleResponse(res, resp)
                 }
             }
 
@@ -169,7 +118,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                     applyHandlingResult(req, res, result)
                 }) -> Logger.handleResultError( (err) => {
                     Logger.logError(err)
-                    handleErrorResp(res, "Internal error", #500)
+                    ResponseManager.handleInternalError(res)
                 } )
             }
             let middlewares = RequestManager.produceMiddlewares(requestHandling)

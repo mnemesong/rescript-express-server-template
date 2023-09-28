@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 5803be0e7675d9a29915060622a5940f $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash a6ad28ecc6d5779f5c71aab37751f7b4 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -23,6 +23,9 @@ o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\s
 o rescript\src\ExpressDefaultRequestManager.ast : astj ..\..\rescript\src\ExpressDefaultRequestManager.res
 o rescript\src\ExpressDefaultRequestManager.d : deps rescript\src\ExpressDefaultRequestManager.ast
 o rescript\src\ExpressDefaultRequestManager.cmj rescript\src\ExpressDefaultRequestManager.cmi ..\js\rescript\src\ExpressDefaultRequestManager.bs.js : mij rescript\src\ExpressDefaultRequestManager.ast
+o rescript\src\ExpressDefaultResponseManager.ast : astj ..\..\rescript\src\ExpressDefaultResponseManager.res
+o rescript\src\ExpressDefaultResponseManager.d : deps rescript\src\ExpressDefaultResponseManager.ast
+o rescript\src\ExpressDefaultResponseManager.cmj rescript\src\ExpressDefaultResponseManager.cmi ..\js\rescript\src\ExpressDefaultResponseManager.bs.js : mij rescript\src\ExpressDefaultResponseManager.ast
 o rescript\src\ExpressDefaultServerConfigurator.ast : astj ..\..\rescript\src\ExpressDefaultServerConfigurator.res
 o rescript\src\ExpressDefaultServerConfigurator.d : deps rescript\src\ExpressDefaultServerConfigurator.ast
 o rescript\src\ExpressDefaultServerConfigurator.cmj rescript\src\ExpressDefaultServerConfigurator.cmi ..\js\rescript\src\ExpressDefaultServerConfigurator.bs.js : mij rescript\src\ExpressDefaultServerConfigurator.ast
