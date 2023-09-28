@@ -1,9 +1,10 @@
-5
+6
 SimpleLogger
 ExpressServer
 ExpressServerTest
+ExpressDefaultRequestManager
 ExpressDefaultServerConfigurator
 ExpressDefaultServerConfiguratorTest
 rescript\src	rescript\test-app	
-1
+1
 0

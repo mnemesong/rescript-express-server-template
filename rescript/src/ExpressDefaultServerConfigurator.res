@@ -1,16 +1,8 @@
 open ExpressServer
 
-%%raw(`
-    const multer = require("multer");
-    const express = require("express");
-    const session = require('express-session');
-`)
-
 type serverEffect = 
     | DestroySession
     | SetSessionVal(string, unknown)
-
-type fileAwaitingField = (string, int)
 
 type redirectStatus = 
     [ #301 
@@ -51,34 +43,7 @@ type handlingResult =
     | OnlyResponse(serverRespType)
     | ResponseWithEffects(serverRespType, array<serverEffect>)
 
-type reqDefault = {
-    queryParams: unknown,
-    bodyData: unknown,
-    session: unknown,
-}
-
-type reqMultipart = {
-    queryParams: unknown,
-    bodyData: unknown,
-    session: unknown,
-    files: unknown,
-}
-
-type filesDestinationPath = string
-
-type fileField = (string, int)
-
-type filesHandlingConfig = 
-    | None
-    | Files(filesDestinationPath, array<fileField>)
-
-type queryHandling = 
-    | Multipart(reqMultipart => handlingResult, filesHandlingConfig)
-    | Default(reqDefault => handlingResult)
-
 type path = string
-
-type route = (routeType, path, queryHandling)
 
 type port = int
 
@@ -93,45 +58,49 @@ type file = {
     size: int
 }
 
+type handlingResultProduce = (unknown, unknown) => handlingResult
+
+type route<'a> = Route(routeType, path, 'a)
+
 module type IExpressDefaultServerConfigurator = {
+    type requestHandling
+    type route
+
     let buildConfig: (array<route>, port, () => unit) => serverStartConfig
+    let route: (routeType, path, requestHandling) => route
 }
 
-module type IExpressDefaultServerConfiguratorFactory = (Logger: ILogger) =>
-    IExpressDefaultServerConfigurator
+module type IExpressRequestManager = {
+    type requestHandling
+    type error
 
-module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfiguratorFactory = 
-    (Logger: ILogger) => 
-{
+    let initMiddlewares: (unknown) => unit
+    let handleRequest: (requestHandling) => (unknown, unknown) => handlingResult
+    let produceMiddlewares: (requestHandling) => array<middleware>
+}
+
+module type IExpressDefaultServerConfiguratorFactory = (
+    Logger: ILogger, 
+    RequestManager: IExpressRequestManager with type error = Logger.error
+) => IExpressDefaultServerConfigurator 
+    with type requestHandling = RequestManager.requestHandling
+    and type route = route<RequestManager.requestHandling>
+
+module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfiguratorFactory = (
+    Logger: ILogger, 
+    RequestManager: IExpressRequestManager with type error = Logger.error
+) => {
     open Belt
 
     type error = Logger.error
+    type requestHandling = RequestManager.requestHandling
+    type route = route<requestHandling>
 
-    let parseQueryParams: (unknown) => unknown = %raw(`
-        function(req) {
-            return req.query ? JSON.parse(JSON.stringify(req.query)) : {};
-        }
-    `)
-
-    let parseBodyData: (unknown) => unknown = %raw(`
-        function(req) {
-            return req.body ? JSON.parse(JSON.stringify(req.body)) : {};
-        }
-    `)
-
-    let parseFiles: (unknown) => unknown = %raw(`
-        function(req) {
-            return req.files ? JSON.parse(JSON.stringify(req.files)) : {};
-        }
-    `)
-
-    let parseSession: (unknown) => unknown = %raw(`
-        function(req) {
-            const result = {};
-            Object.keys(req.session).forEach(k => {result[k] = req.session[k]});
-            return req.session ? JSON.parse(JSON.stringify(result)) : {};
-        }
-    `)
+    let route = (
+        routeType: routeType, 
+        path: path, 
+        handling: requestHandling
+    ): route => Route(routeType, path, handling)
 
     let handleDestroySession =
         (req: unknown): result<unit, error> => 
@@ -213,24 +182,6 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                 | Error(msg, status) => handleErrorResp(res, msg, status)
             }
 
-    let produceMulterFilesMiddleware: 
-        (string, array<fileField>) => middleware = %raw(`
-            function(path, fileFields) {
-                const fields = fileFields.map(ff => ({
-                    name: ff[0],
-                    maxCount: ff[1]
-                }));
-                return multer({ dest: path }).fields(fields);
-            }
-        `)
-
-    let produceMulterNoneMiddleware:
-        () => middleware = %raw(`
-            function() {
-                return multer().none();
-            }
-        `)
-
     let applyHandlingResult = 
         (req: unknown, res:unknown, result: handlingResult) =>
             switch(result) {
@@ -247,51 +198,17 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
 
     let routeToHandler = 
         (route: route): handler => {
-            let (routeType, path, queryHandling) = route
-            let handlingFunc = switch(queryHandling) {
-                | Default(defHandler) => (req: unknown, res: unknown) => { 
-                    Logger.catchUnknown(() => {
-                        let reqDefault: reqDefault = {
-                            queryParams: parseQueryParams(req),
-                            bodyData: parseBodyData(req),
-                            session: parseSession(req),
-                        }
-                        let result = defHandler(reqDefault)
-                        applyHandlingResult(req, res, result)
-                    }) -> Logger.handleResultError( (err) => {
-                        Logger.logError(err)
-                        handleErrorResp(res, "Internal error", #500)
-                    } )
-                }
-                | Multipart(multipartHandler, _) => (req: unknown, res: unknown) => { 
-                    Logger.catchUnknown(() => {
-                        let reqMult: reqMultipart = {
-                            queryParams: parseQueryParams(req),
-                            bodyData: parseBodyData(req),
-                            session: parseSession(req),
-                            files: parseFiles(req),
-                        }
-                        let result = multipartHandler(reqMult)
-                        applyHandlingResult(req, res, result)
-                    }) -> Logger.handleResultError( (err) => {
-                        Logger.logError(err)
-                        handleErrorResp(res, "Internal error", #500)
-                    } )
-                }
+            let Route(routeType, path, requestHandling) = route
+            let handlingFunc = (req, res) => {
+                Logger.catchUnknown(() => {
+                    let result = RequestManager.handleRequest(requestHandling)(req, res)
+                    applyHandlingResult(req, res, result)
+                }) -> Logger.handleResultError( (err) => {
+                    Logger.logError(err)
+                    handleErrorResp(res, "Internal error", #500)
+                } )
             }
-            let middlewares = switch(queryHandling) {
-                | Default(_) => []
-                | Multipart(_, filesHandlingConfig) => 
-                    switch(filesHandlingConfig) {
-                        | None => [produceMulterNoneMiddleware()]
-                        | Files(filesDestinationPath, fileFields) => [
-                            produceMulterFilesMiddleware(
-                                filesDestinationPath, 
-                                fileFields
-                            )
-                        ]
-                    }
-            }
+            let middlewares = RequestManager.produceMiddlewares(requestHandling)
             ({
                 path: path,
                 routeType: routeType,
@@ -300,15 +217,8 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
             })
         }
 
-    let initMiddlewares: (unknown) => unit = %raw(`
-        function(app) {
-            app.use(express.urlencoded({ extended: true }));
-            app.use(express.json());
-            app.use(session({
-              secret: 'sha7d87asb78d',
-            }))
-        }
-    `)
+    let initMiddlewares = 
+        (app: unknown): unit => RequestManager.initMiddlewares(app)
 
     let buildConfig: (array<route>, port, () => unit) => serverStartConfig =
         (routes, port, onInit) => {

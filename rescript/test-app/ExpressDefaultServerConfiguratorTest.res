@@ -1,10 +1,14 @@
 open ExpressServer
 open SimpleLogger
 open ExpressDefaultServerConfigurator
+open ExpressDefaultRequestManager
 open Belt
 
-module ExpressDefaultServerConfigurator = 
-    ExpressDefaultServerConfiguratorFactory(SimpleLogger)
+module ExpressDefaultRequestManager = 
+    ExpressDefaultRequestManagerFactory(SimpleLogger)
+
+module ExpressDefaultServerConfiguratorTest = 
+    ExpressDefaultServerConfiguratorFactory(SimpleLogger, ExpressDefaultRequestManager)
 
 let formHtml = (method: routeType, path: string) => `
 <form action="${path}" method="${method :> string}">
@@ -94,10 +98,10 @@ let parseFormValues = (u: unknown): parsedVals => ({
     textAr: parseUnknownObjectProperty(u, "textAr", parseUnknownAsString),
 })
 
-let routes: array<route> = [
-    (#get, "/", Default((_) => 
+let routes: array<ExpressDefaultServerConfiguratorTest.route> = [
+    Route(#get, "/", Default((_) => 
         OnlyResponse(Html(indexPageHtml)))),
-    (#get, "/apply-get", Default((req) => {
+    Route(#get, "/apply-get", Default((req) => {
         let reqVals = parseFormValues(req.queryParams)
         let result = Js.Json.stringifyAny(reqVals)
         switch result {
@@ -105,7 +109,7 @@ let routes: array<route> = [
             |None => OnlyResponse(Json("{}"))
         }
     })),
-    (#post, "/apply-post", Default((req) => {
+    Route(#post, "/apply-post", Default((req) => {
         let reqVals = parseFormValues(req.bodyData)
         let result = Js.Json.stringifyAny(reqVals)
         switch result {
@@ -113,7 +117,7 @@ let routes: array<route> = [
             |None => OnlyResponse(Json("{}"))
         }
     })),
-    (#post, "/apply-file", Multipart((req) => {
+    Route(#post, "/apply-file", Multipart((req) => {
         let reqVals = ({
             "textInp": parseUnknownObjectProperty(req.bodyData, "textInp", parseUnknownAsString),
             "fileInp": parseUnknownObjectProperty(req.files, "fileInp", (a) => 
@@ -126,13 +130,13 @@ let routes: array<route> = [
             |None => OnlyResponse(Json("{}"))
         }
     }, Files("/uploads", [("fileInp", 1)]))),
-    (#get, "/open-file", Default((_) => {
+    Route(#get, "/open-file", Default((_) => {
         OnlyResponse(OpenFile(testFilePath))
     })),
-    (#get, "/download-file", Default((_) => {
+    Route(#get, "/download-file", Default((_) => {
         OnlyResponse(DownloadFile(testFilePath))
     })),
-    (#get, "/show-session", Default((req) => {
+    Route(#get, "/show-session", Default((req) => {
         let sessionVal = parseUnknownObjectProperty(req.session, "sessionVal", parseUnknownAsString)
         let printVal = switch(sessionVal) {
             | Some(v) => v
@@ -140,13 +144,13 @@ let routes: array<route> = [
         }
         OnlyResponse(Html("Session-val: " ++ printVal))
     })),
-    (#get, "/set-session", Default((_) => {
+    Route(#get, "/set-session", Default((_) => {
         ResponseWithEffects(
             Redirect("/show-session", #303),
             [SetSessionVal("sessionVal", %raw(`"11"`))]
         )
     })),
-    (#get, "/delete-session", Default((_) => {
+    Route(#get, "/delete-session", Default((_) => {
         ResponseWithEffects(
             Redirect("/show-session", #303),
             [DestroySession]
@@ -154,7 +158,7 @@ let routes: array<route> = [
     })),
 ]
 
-let serverConfig = ExpressDefaultServerConfigurator.buildConfig(routes, 80, () => {
+let serverConfig = ExpressDefaultServerConfiguratorTest.buildConfig(routes, 80, () => {
     Js.Console.log("Server had been started")
 })
 
