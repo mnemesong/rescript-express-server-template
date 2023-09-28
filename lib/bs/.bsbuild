@@ -1,11 +1,9 @@
-7
+5
 SimpleLogger
 ExpressServer
 ExpressServerTest
-ExpressServerTemplate
-ExpressDefaultController
 ExpressDefaultServerConfigurator
 ExpressDefaultServerConfiguratorTest
 rescript\src	rescript\test-app	
-1
+1
 0

@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 8a7857f5f068588c6436a920f75bbf8f $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 5bd2ddb6db898b6cd57d390fdcadeff7 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -20,12 +20,6 @@ o rescript\src\SimpleLogger.cmj rescript\src\SimpleLogger.cmi ..\js\rescript\src
 o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
 o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
 o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
-o rescript\src\ExpressServerTemplate.ast : astj ..\..\rescript\src\ExpressServerTemplate.res
-o rescript\src\ExpressServerTemplate.d : deps rescript\src\ExpressServerTemplate.ast
-o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi ..\js\rescript\src\ExpressServerTemplate.bs.js : mij rescript\src\ExpressServerTemplate.ast
-o rescript\src\ExpressDefaultController.ast : astj ..\..\rescript\src\ExpressDefaultController.res
-o rescript\src\ExpressDefaultController.d : deps rescript\src\ExpressDefaultController.ast
-o rescript\src\ExpressDefaultController.cmj rescript\src\ExpressDefaultController.cmi ..\js\rescript\src\ExpressDefaultController.bs.js : mij rescript\src\ExpressDefaultController.ast
 o rescript\src\ExpressDefaultServerConfigurator.ast : astj ..\..\rescript\src\ExpressDefaultServerConfigurator.res
 o rescript\src\ExpressDefaultServerConfigurator.d : deps rescript\src\ExpressDefaultServerConfigurator.ast
 o rescript\src\ExpressDefaultServerConfigurator.cmj rescript\src\ExpressDefaultServerConfigurator.cmi ..\js\rescript\src\ExpressDefaultServerConfigurator.bs.js : mij rescript\src\ExpressDefaultServerConfigurator.ast
