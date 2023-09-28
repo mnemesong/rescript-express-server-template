@@ -174,7 +174,7 @@ module ExpressDefaultRequestManagerFactory: IExpressDefaultRequestManagerFactory
     }
 
     let handleEffect = 
-        (req: unknown, _, re: requestEffect): unit => 
+        (req: unknown, re: requestEffect): unit => 
             switch(re) {
                 | DestroySession => handleDestroySession(req)
                 | SetSessionVal(name, val) => handleSetSessionVal(req, name, val)

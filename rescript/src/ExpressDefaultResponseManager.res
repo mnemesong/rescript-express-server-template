@@ -48,7 +48,7 @@ module ExpressDefaultResponseManager: IExpressDefaultResponseManager = {
 
     let initMiddlewares: (unknown) => unit = (_) => ()
 
-    let handleEffect = (_, _, _): unit => ()
+    let handleEffect = (_, _): unit => ()
 
     let handleHtmlResp: (unknown, string) => unit = %raw(`
         function(res, html) {

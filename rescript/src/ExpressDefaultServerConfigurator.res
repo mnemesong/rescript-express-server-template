@@ -47,7 +47,7 @@ module type IExpressRequestManager = {
             effect<requestEffect, responseEffect>
         >
     let produceMiddlewares: (requestHandling) => array<middleware>
-    let handleEffect: (unknown, unknown, requestEffect) => unit
+    let handleEffect: (unknown, requestEffect) => unit
 }
 
 module type IExpressResponseManager = {
@@ -55,7 +55,7 @@ module type IExpressResponseManager = {
     type responseEffect
 
     let initMiddlewares: (unknown) => unit
-    let handleEffect: (unknown, unknown, responseEffect) => unit
+    let handleEffect: (unknown, responseEffect) => unit
     let handleResponse: (unknown, responseType) => unit
     let handleInternalError: (unknown) => unit
 }
@@ -94,8 +94,8 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
 
     let handleEffect = (req: unknown, res: unknown, e: effect): unit =>
         switch(e) {
-            | RequestEffect(re) => RequestManager.handleEffect(req, res, re)
-            | ResponseEffect(re) => ResponseManager.handleEffect(req, res, re)
+            | RequestEffect(re) => RequestManager.handleEffect(req, re)
+            | ResponseEffect(re) => ResponseManager.handleEffect(res, re)
         }
 
     let applyHandlingResult = 
