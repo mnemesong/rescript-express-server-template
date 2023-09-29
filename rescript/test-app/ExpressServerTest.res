@@ -1,7 +1,7 @@
 open ExpressServer
-open SimpleLogger
+open ExpressDefaultLogger
 
-module ExpressServerTest = ExpressServerFactory(SimpleLogger)
+module ExpressServerTest = ExpressServerFactory(ExpressDefaultLogger)
 
 let indexHandler: (unknown, unknown) => unit = 
 %raw(`

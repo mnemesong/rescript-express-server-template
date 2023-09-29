@@ -1,11 +1,14 @@
-7
-SimpleLogger
+10
+Handler
 ExpressServer
 ExpressServerTest
+ExpressDefaultLogger
+ExpressDefaultAuthHandler
+ExpressDefaultInteractors
 ExpressDefaultRequestManager
 ExpressDefaultResponseManager
 ExpressDefaultServerConfigurator
 ExpressDefaultServerConfiguratorTest
 rescript\src	rescript\test-app	
-1
+1
 0

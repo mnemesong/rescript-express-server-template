@@ -1,1 +1,1 @@
-rescript\src\ExpressDefaultResponseManager.cmj : rescript\src\ExpressDefaultServerConfigurator.cmj rescript\src\ExpressDefaultServerConfigurator.cmi
+rescript\src\ExpressDefaultResponseManager.cmj : rescript\src\ExpressDefaultServerConfigurator.cmj rescript\src\ExpressDefaultServerConfigurator.cmi rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi

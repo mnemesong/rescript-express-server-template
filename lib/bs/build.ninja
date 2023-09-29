@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash a6ad28ecc6d5779f5c71aab37751f7b4 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash b7254956786af724bcf80b9b405ae2da $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -14,12 +14,21 @@ o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cm
 o rescript\test-app\ExpressDefaultServerConfiguratorTest.ast : astj ..\..\rescript\test-app\ExpressDefaultServerConfiguratorTest.res
 o rescript\test-app\ExpressDefaultServerConfiguratorTest.d : deps rescript\test-app\ExpressDefaultServerConfiguratorTest.ast
 o rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj rescript\test-app\ExpressDefaultServerConfiguratorTest.cmi ..\js\rescript\test-app\ExpressDefaultServerConfiguratorTest.bs.js : mij rescript\test-app\ExpressDefaultServerConfiguratorTest.ast
-o rescript\src\SimpleLogger.ast : astj ..\..\rescript\src\SimpleLogger.res
-o rescript\src\SimpleLogger.d : deps rescript\src\SimpleLogger.ast
-o rescript\src\SimpleLogger.cmj rescript\src\SimpleLogger.cmi ..\js\rescript\src\SimpleLogger.bs.js : mij rescript\src\SimpleLogger.ast
+o rescript\src\Handler.ast : astj ..\..\rescript\src\Handler.res
+o rescript\src\Handler.d : deps rescript\src\Handler.ast
+o rescript\src\Handler.cmj rescript\src\Handler.cmi ..\js\rescript\src\Handler.bs.js : mij rescript\src\Handler.ast
 o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
 o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
 o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
+o rescript\src\ExpressDefaultLogger.ast : astj ..\..\rescript\src\ExpressDefaultLogger.res
+o rescript\src\ExpressDefaultLogger.d : deps rescript\src\ExpressDefaultLogger.ast
+o rescript\src\ExpressDefaultLogger.cmj rescript\src\ExpressDefaultLogger.cmi ..\js\rescript\src\ExpressDefaultLogger.bs.js : mij rescript\src\ExpressDefaultLogger.ast
+o rescript\src\ExpressDefaultAuthHandler.ast : astj ..\..\rescript\src\ExpressDefaultAuthHandler.res
+o rescript\src\ExpressDefaultAuthHandler.d : deps rescript\src\ExpressDefaultAuthHandler.ast
+o rescript\src\ExpressDefaultAuthHandler.cmj rescript\src\ExpressDefaultAuthHandler.cmi ..\js\rescript\src\ExpressDefaultAuthHandler.bs.js : mij rescript\src\ExpressDefaultAuthHandler.ast
+o rescript\src\ExpressDefaultInteractors.ast : astj ..\..\rescript\src\ExpressDefaultInteractors.res
+o rescript\src\ExpressDefaultInteractors.d : deps rescript\src\ExpressDefaultInteractors.ast
+o rescript\src\ExpressDefaultInteractors.cmj rescript\src\ExpressDefaultInteractors.cmi ..\js\rescript\src\ExpressDefaultInteractors.bs.js : mij rescript\src\ExpressDefaultInteractors.ast
 o rescript\src\ExpressDefaultRequestManager.ast : astj ..\..\rescript\src\ExpressDefaultRequestManager.res
 o rescript\src\ExpressDefaultRequestManager.d : deps rescript\src\ExpressDefaultRequestManager.ast
 o rescript\src\ExpressDefaultRequestManager.cmj rescript\src\ExpressDefaultRequestManager.cmi ..\js\rescript\src\ExpressDefaultRequestManager.bs.js : mij rescript\src\ExpressDefaultRequestManager.ast

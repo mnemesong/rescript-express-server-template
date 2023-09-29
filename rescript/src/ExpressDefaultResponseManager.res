@@ -1,4 +1,5 @@
 open ExpressDefaultServerConfigurator
+open ExpressServer
 
 type redirectStatus = 
     [ #301 
@@ -42,9 +43,16 @@ module type IExpressDefaultResponseManager =
         with type responseType = serverRespType
         and type responseEffect = responseEffect
 
-module ExpressDefaultResponseManager: IExpressDefaultResponseManager = {
+module type IExpressDefaultResponseManagerFactory = (Logger: ILogger) =>
+    IExpressDefaultResponseManager
+        with type error = Logger.error
+
+module ExpressDefaultResponseManagerFactory: IExpressDefaultResponseManagerFactory = (
+    Logger: ILogger
+) => {
     type responseType = serverRespType
     type responseEffect = responseEffect
+    type error = Logger.error
 
     let initMiddlewares: (unknown) => unit = (_) => ()
 
@@ -99,6 +107,8 @@ module ExpressDefaultResponseManager: IExpressDefaultResponseManager = {
                 | Error(msg, status) => handleErrorResp(res, msg, status)
             }
 
-    let handleInternalError = (res: unknown): unit =>
+    let handleInternalError = (res: unknown, err: error): unit => {
+        Logger.logError(err)
         handleErrorResp(res, "Internal error", #500)
+    }
 } 

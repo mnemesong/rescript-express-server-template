@@ -1,16 +1,19 @@
 open ExpressServer
-open SimpleLogger
+open ExpressDefaultLogger
 open ExpressDefaultServerConfigurator
 open ExpressDefaultRequestManager
 open ExpressDefaultResponseManager
 open Belt
 
+module ExpressDefaultResponseManager = 
+    ExpressDefaultResponseManagerFactory(ExpressDefaultLogger)
+
 module ExpressDefaultRequestManager = 
-    ExpressDefaultRequestManagerFactory(SimpleLogger)
+    ExpressDefaultRequestManagerFactory(ExpressDefaultLogger)
 
 module ExpressDefaultServerConfiguratorTest = 
     ExpressDefaultServerConfiguratorFactory(
-        SimpleLogger, 
+        ExpressDefaultLogger, 
         ExpressDefaultResponseManager, 
         ExpressDefaultRequestManager
     )
@@ -167,6 +170,6 @@ let serverConfig = ExpressDefaultServerConfiguratorTest.buildConfig(routes, 80, 
     Js.Console.log("Server had been started")
 })
 
-module ExpressServerTest2 = ExpressServerFactory(SimpleLogger)
+module ExpressServerTest2 = ExpressServerFactory(ExpressDefaultLogger)
 
 ExpressServerTest2.run(serverConfig)

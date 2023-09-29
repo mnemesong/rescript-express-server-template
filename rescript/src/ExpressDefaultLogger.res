@@ -1,6 +1,6 @@
 open ExpressServer
 
-module SimpleLogger: ILogger = {
+module ExpressDefaultLogger: ILogger = {
     type error = Js.Exn.t
 
     let catchUnknown: (() => 'a) => result<'a, error> =

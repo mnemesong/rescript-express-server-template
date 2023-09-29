@@ -25,6 +25,17 @@ type fileField = (string, int)
 
 type filesDestinationPath = string
 
+type file = {
+    fieldname: string,
+    originalname: string,
+    encoding: string,
+    mimetype: string,
+    destination: string,
+    filename: string,
+    path: string,
+    size: int
+}
+
 type filesHandlingConfig = 
     | None
     | Files(filesDestinationPath, array<fileField>)

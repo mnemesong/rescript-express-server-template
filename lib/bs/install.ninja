@@ -11,14 +11,26 @@ o ExpressDefaultServerConfiguratorTest.cmi : cp ..\bs\rescript\test-app\ExpressD
 o ExpressDefaultServerConfiguratorTest.cmj : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj
 o ExpressDefaultServerConfiguratorTest.cmt : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmt
 o ExpressDefaultServerConfiguratorTest.res : cp ..\..\rescript\test-app\ExpressDefaultServerConfiguratorTest.res
-o SimpleLogger.cmi : cp ..\bs\rescript\src\SimpleLogger.cmi
-o SimpleLogger.cmj : cp ..\bs\rescript\src\SimpleLogger.cmj
-o SimpleLogger.cmt : cp ..\bs\rescript\src\SimpleLogger.cmt
-o SimpleLogger.res : cp ..\..\rescript\src\SimpleLogger.res
+o Handler.cmi : cp ..\bs\rescript\src\Handler.cmi
+o Handler.cmj : cp ..\bs\rescript\src\Handler.cmj
+o Handler.cmt : cp ..\bs\rescript\src\Handler.cmt
+o Handler.res : cp ..\..\rescript\src\Handler.res
 o ExpressServer.cmi : cp ..\bs\rescript\src\ExpressServer.cmi
 o ExpressServer.cmj : cp ..\bs\rescript\src\ExpressServer.cmj
 o ExpressServer.cmt : cp ..\bs\rescript\src\ExpressServer.cmt
 o ExpressServer.res : cp ..\..\rescript\src\ExpressServer.res
+o ExpressDefaultLogger.cmi : cp ..\bs\rescript\src\ExpressDefaultLogger.cmi
+o ExpressDefaultLogger.cmj : cp ..\bs\rescript\src\ExpressDefaultLogger.cmj
+o ExpressDefaultLogger.cmt : cp ..\bs\rescript\src\ExpressDefaultLogger.cmt
+o ExpressDefaultLogger.res : cp ..\..\rescript\src\ExpressDefaultLogger.res
+o ExpressDefaultAuthHandler.cmi : cp ..\bs\rescript\src\ExpressDefaultAuthHandler.cmi
+o ExpressDefaultAuthHandler.cmj : cp ..\bs\rescript\src\ExpressDefaultAuthHandler.cmj
+o ExpressDefaultAuthHandler.cmt : cp ..\bs\rescript\src\ExpressDefaultAuthHandler.cmt
+o ExpressDefaultAuthHandler.res : cp ..\..\rescript\src\ExpressDefaultAuthHandler.res
+o ExpressDefaultInteractors.cmi : cp ..\bs\rescript\src\ExpressDefaultInteractors.cmi
+o ExpressDefaultInteractors.cmj : cp ..\bs\rescript\src\ExpressDefaultInteractors.cmj
+o ExpressDefaultInteractors.cmt : cp ..\bs\rescript\src\ExpressDefaultInteractors.cmt
+o ExpressDefaultInteractors.res : cp ..\..\rescript\src\ExpressDefaultInteractors.res
 o ExpressDefaultRequestManager.cmi : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmi
 o ExpressDefaultRequestManager.cmj : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmj
 o ExpressDefaultRequestManager.cmt : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmt
@@ -31,4 +43,4 @@ o ExpressDefaultServerConfigurator.cmi : cp ..\bs\rescript\src\ExpressDefaultSer
 o ExpressDefaultServerConfigurator.cmj : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmj
 o ExpressDefaultServerConfigurator.cmt : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmt
 o ExpressDefaultServerConfigurator.res : cp ..\..\rescript\src\ExpressDefaultServerConfigurator.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj SimpleLogger.cmi SimpleLogger.cmj ExpressServer.cmi ExpressServer.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj Handler.cmi Handler.cmj ExpressServer.cmi ExpressServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressDefaultAuthHandler.cmi ExpressDefaultAuthHandler.cmj ExpressDefaultInteractors.cmi ExpressDefaultInteractors.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 

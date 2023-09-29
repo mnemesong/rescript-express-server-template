@@ -12,7 +12,7 @@ type routeType =
     | #delete
     | #head
     | #lock
-    | #mege
+    | #merge
     | #mkactivity
     | #mkcol
     | #move

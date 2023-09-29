@@ -4,17 +4,6 @@ type path = string
 
 type port = int
 
-type file = {
-    fieldname: string,
-    originalname: string,
-    encoding: string,
-    mimetype: string,
-    destination: string,
-    filename: string,
-    path: string,
-    size: int
-}
-
 type route<'a> = Route(routeType, path, 'a)
 
 type effect<'a, 'b> = 
@@ -30,7 +19,6 @@ module type IExpressDefaultServerConfigurator = {
     type route
 
     let buildConfig: (array<route>, port, () => unit) => serverStartConfig
-    let route: (routeType, path, requestHandling) => route
 }
 
 module type IExpressRequestManager = {
@@ -53,16 +41,18 @@ module type IExpressRequestManager = {
 module type IExpressResponseManager = {
     type responseType
     type responseEffect
+    type error
 
     let initMiddlewares: (unknown) => unit
     let handleEffect: (unknown, responseEffect) => unit
     let handleResponse: (unknown, responseType) => unit
-    let handleInternalError: (unknown) => unit
+    let handleInternalError: (unknown, error) => unit
 }
 
 module type IExpressDefaultServerConfiguratorFactory = (
     Logger: ILogger, 
-    ResponseManager: IExpressResponseManager,
+    ResponseManager: IExpressResponseManager
+        with type error = Logger.error,
     RequestManager: IExpressRequestManager
         with type error = Logger.error
         and type responseType = ResponseManager.responseType
@@ -73,7 +63,8 @@ module type IExpressDefaultServerConfiguratorFactory = (
 
 module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfiguratorFactory = (
     Logger: ILogger, 
-    ResponseManager: IExpressResponseManager,
+    ResponseManager: IExpressResponseManager
+        with type error = Logger.error,
     RequestManager: IExpressRequestManager
         with type error = Logger.error
         and type responseType = ResponseManager.responseType
@@ -85,12 +76,6 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
     type route = route<RequestManager.requestHandling>
     type effect = effect<RequestManager.requestEffect, ResponseManager.responseEffect>
     type responseType = ResponseManager.responseType
-
-    let route = (
-        routeType: routeType, 
-        path: path, 
-        handling: requestHandling
-    ): route => Route(routeType, path, handling)
 
     let handleEffect = (req: unknown, res: unknown, e: effect): unit =>
         switch(e) {
@@ -117,8 +102,7 @@ module ExpressDefaultServerConfiguratorFactory: IExpressDefaultServerConfigurato
                     let result = RequestManager.handleRequest(requestHandling)(req, res)
                     applyHandlingResult(req, res, result)
                 }) -> Logger.handleResultError( (err) => {
-                    Logger.logError(err)
-                    ResponseManager.handleInternalError(res)
+                    ResponseManager.handleInternalError(res, err)
                 } )
             }
             let middlewares = RequestManager.produceMiddlewares(requestHandling)
