@@ -3,9 +3,18 @@ open ExpressDefaultLogger
 open ExpressDefaultServerConfigurator
 open ExpressDefaultRequestManager
 open ExpressDefaultResponseManager
-open Belt
 
 type routeType = routeType
+type handlerFunc = handlerFunc
+type appMiddlewareInit = appMiddlewareInit
+type middleware = middleware
+type handler = handler
+type path = path
+type port = port
+type route<'a> = route<'a>
+type effect<'a, 'b> = effect<'a, 'b>
+type handlingResult<'a, 'b> = handlingResult<'a, 'b>
+type serverStartConfig = serverStartConfig
 
 module ExpressResponseManagerTemplate = 
     ExpressDefaultResponseManagerFactory(ExpressDefaultLogger)
