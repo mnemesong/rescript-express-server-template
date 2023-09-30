@@ -15,6 +15,19 @@ type route<'a> = route<'a>
 type effect<'a, 'b> = effect<'a, 'b>
 type handlingResult<'a, 'b> = handlingResult<'a, 'b>
 type serverStartConfig = serverStartConfig
+type reqDefault = reqDefault
+type reqMultipart = reqMultipart
+type fileField = (string, int)
+type file = {
+    fieldname: string,
+    originalname: string,
+    encoding: string,
+    mimetype: string,
+    destination: string,
+    filename: string,
+    path: string,
+    size: int
+}
 
 module ExpressResponseManagerTemplate = 
     ExpressDefaultResponseManagerFactory(ExpressDefaultLogger)
