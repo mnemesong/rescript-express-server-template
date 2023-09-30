@@ -213,6 +213,8 @@ module type IExpressDefaultServerConfiguratorFactory = (
     with type requestHandling = RequestManager.requestHandling
     and type route = route<RequestManager.requestHandling>
 ```
+ready ExpressDefaultServerConfiguratorFactory functor exists in module
+ExpressDefaultServerConfigurator
 
 ## Author
 Anatoly Starodubtsev
