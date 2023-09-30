@@ -7,6 +7,10 @@ o ExpressServerTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTest.cmi
 o ExpressServerTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTest.cmj
 o ExpressServerTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTest.cmt
 o ExpressServerTest.res : cp ..\..\rescript\test-app\ExpressServerTest.res
+o ExpressNewServerTest.cmi : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmi
+o ExpressNewServerTest.cmj : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmj
+o ExpressNewServerTest.cmt : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmt
+o ExpressNewServerTest.res : cp ..\..\rescript\test-app\ExpressNewServerTest.res
 o ExpressServerTemplateTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmi
 o ExpressServerTemplateTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmj
 o ExpressServerTemplateTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmt
@@ -19,6 +23,10 @@ o ExpressServer.cmi : cp ..\bs\rescript\src\ExpressServer.cmi
 o ExpressServer.cmj : cp ..\bs\rescript\src\ExpressServer.cmj
 o ExpressServer.cmt : cp ..\bs\rescript\src\ExpressServer.cmt
 o ExpressServer.res : cp ..\..\rescript\src\ExpressServer.res
+o ExpressNewServer.cmi : cp ..\bs\rescript\src\ExpressNewServer.cmi
+o ExpressNewServer.cmj : cp ..\bs\rescript\src\ExpressNewServer.cmj
+o ExpressNewServer.cmt : cp ..\bs\rescript\src\ExpressNewServer.cmt
+o ExpressNewServer.res : cp ..\..\rescript\src\ExpressNewServer.res
 o ExpressDefaultLogger.cmi : cp ..\bs\rescript\src\ExpressDefaultLogger.cmi
 o ExpressDefaultLogger.cmj : cp ..\bs\rescript\src\ExpressDefaultLogger.cmj
 o ExpressDefaultLogger.cmt : cp ..\bs\rescript\src\ExpressDefaultLogger.cmt
@@ -39,4 +47,4 @@ o ExpressDefaultServerConfigurator.cmi : cp ..\bs\rescript\src\ExpressDefaultSer
 o ExpressDefaultServerConfigurator.cmj : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmj
 o ExpressDefaultServerConfigurator.cmt : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmt
 o ExpressDefaultServerConfigurator.res : cp ..\..\rescript\src\ExpressDefaultServerConfigurator.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 

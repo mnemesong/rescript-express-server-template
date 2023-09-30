@@ -8,7 +8,8 @@
     "res:dev": "rescript build -w",
     "test:server": "node ./lib/js/rescript/test-app/ExpressServerTest.bs",
     "test:config": "node ./lib/js/rescript/test-app/ExpressDefaultServerConfiguratorTest.bs",
-    "test:template": "node ./lib/js/rescript/test-app/ExpressServerTemplateTest.bs"
+    "test:template": "node ./lib/js/rescript/test-app/ExpressServerTemplateTest.bs",
+    "test:newserver": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs"
   },
   "repository": {
     "type": "git",

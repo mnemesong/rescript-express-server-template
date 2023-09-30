@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 98859e8dc40a2e5468680eaeaecea817 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 1f030f500cfaba897dab795cdeffd07b $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -11,6 +11,9 @@ rule mij
   dyndep = 1
   restat = 1
 o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast
+o rescript\test-app\ExpressNewServerTest.ast : astj ..\..\rescript\test-app\ExpressNewServerTest.res
+o rescript\test-app\ExpressNewServerTest.d : deps rescript\test-app\ExpressNewServerTest.ast
+o rescript\test-app\ExpressNewServerTest.cmj rescript\test-app\ExpressNewServerTest.cmi ..\js\rescript\test-app\ExpressNewServerTest.bs.js : mij rescript\test-app\ExpressNewServerTest.ast
 o rescript\test-app\ExpressServerTemplateTest.ast : astj ..\..\rescript\test-app\ExpressServerTemplateTest.res
 o rescript\test-app\ExpressServerTemplateTest.d : deps rescript\test-app\ExpressServerTemplateTest.ast
 o rescript\test-app\ExpressServerTemplateTest.cmj rescript\test-app\ExpressServerTemplateTest.cmi ..\js\rescript\test-app\ExpressServerTemplateTest.bs.js : mij rescript\test-app\ExpressServerTemplateTest.ast
@@ -20,6 +23,9 @@ o rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj rescript\test-app\E
 o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
 o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
 o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
+o rescript\src\ExpressNewServer.ast : astj ..\..\rescript\src\ExpressNewServer.res
+o rescript\src\ExpressNewServer.d : deps rescript\src\ExpressNewServer.ast
+o rescript\src\ExpressNewServer.cmj rescript\src\ExpressNewServer.cmi ..\js\rescript\src\ExpressNewServer.bs.js : mij rescript\src\ExpressNewServer.ast
 o rescript\src\ExpressDefaultLogger.ast : astj ..\..\rescript\src\ExpressDefaultLogger.res
 o rescript\src\ExpressDefaultLogger.d : deps rescript\src\ExpressDefaultLogger.ast
 o rescript\src\ExpressDefaultLogger.cmj rescript\src\ExpressDefaultLogger.cmi ..\js\rescript\src\ExpressDefaultLogger.bs.js : mij rescript\src\ExpressDefaultLogger.ast
