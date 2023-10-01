@@ -6,6 +6,7 @@ open ExpressSessionHandlerConverter
 open ExpressFileHandlerConverter
 open! ExpressHandlerMiddleware
 
+module Default = MakeDefault(DefaultErrorStrategy)
 module QueryConverter = ExpressParseUrlHandlerConverter.Make(Default)
 module QueryHandler = Make( Default, QueryConverter )
 module JsonConverter = ExpressParseJsonHandlerConverter.Make(QueryHandler)

@@ -52,7 +52,23 @@ module type Default = Handler
     with type hReq = (request, response)
     and type hRes = serverRespType
 
-module Default: Default = {
+module type ErrorStrategy = {
+    let wrapTryCatch: (() => unit) => unit
+}
+
+module DefaultErrorStrategy: ErrorStrategy = {
+    let wrapTryCatch: (() => unit) => unit =
+        (handler) => try {
+            handler()
+        } catch {
+            | Js.Exn.Error(obj) => Js.Console.log(obj)
+            | _ => Js.Console.log("unknown error")
+        }
+}
+
+module type MakeDefault = (ErrorStrategy: ErrorStrategy) => Default
+
+module MakeDefault: MakeDefault = (ErrorStrategy: ErrorStrategy) => {
     type hReq = (request, response)
     type hRes = serverRespType
 
@@ -112,8 +128,9 @@ module Default: Default = {
 
     let convert:  (hReq => hRes) => (request, response) => unit =
         (handler: hReq => hRes) => 
-            (req, res) => 
-                handler((req, res))|>applyRes((req, res))
+            (req, res) => ErrorStrategy.wrapTryCatch(
+                () => handler((req, res))|>applyRes((req, res))
+            )
 
     let middlewares: array<middleware> = []
 
