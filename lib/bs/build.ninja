@@ -1,28 +1,28 @@
 rescript = 1
 rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
-o rescript\test-app\ExpressNewServerTest.ast : astj ..\..\rescript\test-app\ExpressNewServerTest.res
+o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 15eb6b1b48dc0bdb8cea5a562bf56ff1 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 3605d0d45320465f8d09979cdd65a3e4 $in
   restat = 1
-o rescript\test-app\ExpressNewServerTest.d : deps rescript\test-app\ExpressNewServerTest.ast
+o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js $i
   dyndep = 1
   restat = 1
-o rescript\test-app\ExpressNewServerTest.cmj rescript\test-app\ExpressNewServerTest.cmi ..\js\rescript\test-app\ExpressNewServerTest.bs.js : mij rescript\test-app\ExpressNewServerTest.ast
+o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast
 o rescript\test-app\ExpressPublicUsageCase.ast : astj ..\..\rescript\test-app\ExpressPublicUsageCase.res
 o rescript\test-app\ExpressPublicUsageCase.d : deps rescript\test-app\ExpressPublicUsageCase.ast
 o rescript\test-app\ExpressPublicUsageCase.cmj rescript\test-app\ExpressPublicUsageCase.cmi ..\js\rescript\test-app\ExpressPublicUsageCase.bs.js : mij rescript\test-app\ExpressPublicUsageCase.ast
-o rescript\test-app\ExpressNewServerMiddlewaresTest.ast : astj ..\..\rescript\test-app\ExpressNewServerMiddlewaresTest.res
-o rescript\test-app\ExpressNewServerMiddlewaresTest.d : deps rescript\test-app\ExpressNewServerMiddlewaresTest.ast
-o rescript\test-app\ExpressNewServerMiddlewaresTest.cmj rescript\test-app\ExpressNewServerMiddlewaresTest.cmi ..\js\rescript\test-app\ExpressNewServerMiddlewaresTest.bs.js : mij rescript\test-app\ExpressNewServerMiddlewaresTest.ast
+o rescript\test-app\ExpressServerMiddlewaresTest.ast : astj ..\..\rescript\test-app\ExpressServerMiddlewaresTest.res
+o rescript\test-app\ExpressServerMiddlewaresTest.d : deps rescript\test-app\ExpressServerMiddlewaresTest.ast
+o rescript\test-app\ExpressServerMiddlewaresTest.cmj rescript\test-app\ExpressServerMiddlewaresTest.cmi ..\js\rescript\test-app\ExpressServerMiddlewaresTest.bs.js : mij rescript\test-app\ExpressServerMiddlewaresTest.ast
+o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
+o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
+o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
 o rescript\src\ExpressHandler.ast : astj ..\..\rescript\src\ExpressHandler.res
 o rescript\src\ExpressHandler.d : deps rescript\src\ExpressHandler.ast
 o rescript\src\ExpressHandler.cmj rescript\src\ExpressHandler.cmi ..\js\rescript\src\ExpressHandler.bs.js : mij rescript\src\ExpressHandler.ast
-o rescript\src\ExpressNewServer.ast : astj ..\..\rescript\src\ExpressNewServer.res
-o rescript\src\ExpressNewServer.d : deps rescript\src\ExpressNewServer.ast
-o rescript\src\ExpressNewServer.cmj rescript\src\ExpressNewServer.cmi ..\js\rescript\src\ExpressNewServer.bs.js : mij rescript\src\ExpressNewServer.ast
 o rescript\src\ExpressHandlerMiddleware.ast : astj ..\..\rescript\src\ExpressHandlerMiddleware.res
 o rescript\src\ExpressHandlerMiddleware.d : deps rescript\src\ExpressHandlerMiddleware.ast
 o rescript\src\ExpressHandlerMiddleware.cmj rescript\src\ExpressHandlerMiddleware.cmi ..\js\rescript\src\ExpressHandlerMiddleware.bs.js : mij rescript\src\ExpressHandlerMiddleware.ast

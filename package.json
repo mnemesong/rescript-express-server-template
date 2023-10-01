@@ -6,9 +6,9 @@
   "scripts": {
     "res:build": "rescript",
     "res:dev": "rescript build -w",
-    "test:server": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs",
+    "test:server": "node ./lib/js/rescript/test-app/ExpressServerTest.bs",
     "test:usecase": "node ./lib/js/rescript/test-app/ExpressPublicUsageCase.bs",
-    "test:middlewares": "node ./lib/js/rescript/test-app/ExpressNewServerMiddlewaresTest.bs"
+    "test:middlewares": "node ./lib/js/rescript/test-app/ExpressServerMiddlewaresTest.bs"
   },
   "repository": {
     "type": "git",

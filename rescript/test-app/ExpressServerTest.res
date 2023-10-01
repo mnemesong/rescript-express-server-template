@@ -1,4 +1,4 @@
-open ExpressNewServer
+open ExpressServer
 
 let routes = [
     Route(#get, "/", Handler([], (_, res) => {

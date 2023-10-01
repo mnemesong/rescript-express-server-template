@@ -1,1 +1,1 @@
-rescript\src\ExpressHandler.cmj : rescript\src\ExpressNewServer.cmj rescript\src\ExpressNewServer.cmi
+rescript\src\ExpressHandler.cmj : rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi
