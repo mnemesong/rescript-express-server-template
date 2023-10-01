@@ -57,7 +57,6 @@ let runServer = (
         let Handler(middlewares, scenario) = handler
         let reg: (expressApp, routeType, url, array<middleware>, scenario) => unit =
         %raw(`function(app, routeType, url, middlewares, scenario) {
-            console.log("Register route:", url);
             const fParams = [url].concat(middlewares).concat([scenario]);
             app[routeType](...fParams);
         }`)

@@ -9,7 +9,8 @@
     "test:server": "node ./lib/js/rescript/test-app/ExpressServerTest.bs",
     "test:config": "node ./lib/js/rescript/test-app/ExpressDefaultServerConfiguratorTest.bs",
     "test:template": "node ./lib/js/rescript/test-app/ExpressServerTemplateTest.bs",
-    "test:newserver": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs"
+    "test:newserver": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs",
+    "test:middlewares": "node ./lib/js/rescript/test-app/ExpressNewServerMiddlewaresTest.bs"
   },
   "repository": {
     "type": "git",

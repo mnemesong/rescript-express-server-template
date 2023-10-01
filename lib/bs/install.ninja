@@ -15,6 +15,10 @@ o ExpressServerTemplateTest.cmi : cp ..\bs\rescript\test-app\ExpressServerTempla
 o ExpressServerTemplateTest.cmj : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmj
 o ExpressServerTemplateTest.cmt : cp ..\bs\rescript\test-app\ExpressServerTemplateTest.cmt
 o ExpressServerTemplateTest.res : cp ..\..\rescript\test-app\ExpressServerTemplateTest.res
+o ExpressNewServerMiddlewaresTest.cmi : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmi
+o ExpressNewServerMiddlewaresTest.cmj : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmj
+o ExpressNewServerMiddlewaresTest.cmt : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmt
+o ExpressNewServerMiddlewaresTest.res : cp ..\..\rescript\test-app\ExpressNewServerMiddlewaresTest.res
 o ExpressDefaultServerConfiguratorTest.cmi : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmi
 o ExpressDefaultServerConfiguratorTest.cmj : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmj
 o ExpressDefaultServerConfiguratorTest.cmt : cp ..\bs\rescript\test-app\ExpressDefaultServerConfiguratorTest.cmt
@@ -23,6 +27,10 @@ o ExpressServer.cmi : cp ..\bs\rescript\src\ExpressServer.cmi
 o ExpressServer.cmj : cp ..\bs\rescript\src\ExpressServer.cmj
 o ExpressServer.cmt : cp ..\bs\rescript\src\ExpressServer.cmt
 o ExpressServer.res : cp ..\..\rescript\src\ExpressServer.res
+o ExpressHandler.cmi : cp ..\bs\rescript\src\ExpressHandler.cmi
+o ExpressHandler.cmj : cp ..\bs\rescript\src\ExpressHandler.cmj
+o ExpressHandler.cmt : cp ..\bs\rescript\src\ExpressHandler.cmt
+o ExpressHandler.res : cp ..\..\rescript\src\ExpressHandler.res
 o ExpressNewServer.cmi : cp ..\bs\rescript\src\ExpressNewServer.cmi
 o ExpressNewServer.cmj : cp ..\bs\rescript\src\ExpressNewServer.cmj
 o ExpressNewServer.cmt : cp ..\bs\rescript\src\ExpressNewServer.cmt
@@ -35,6 +43,10 @@ o ExpressServerTemplate.cmi : cp ..\bs\rescript\src\ExpressServerTemplate.cmi
 o ExpressServerTemplate.cmj : cp ..\bs\rescript\src\ExpressServerTemplate.cmj
 o ExpressServerTemplate.cmt : cp ..\bs\rescript\src\ExpressServerTemplate.cmt
 o ExpressServerTemplate.res : cp ..\..\rescript\src\ExpressServerTemplate.res
+o ExpressHandlerMiddleware.cmi : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmi
+o ExpressHandlerMiddleware.cmj : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmj
+o ExpressHandlerMiddleware.cmt : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmt
+o ExpressHandlerMiddleware.res : cp ..\..\rescript\src\ExpressHandlerMiddleware.res
 o ExpressDefaultRequestManager.cmi : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmi
 o ExpressDefaultRequestManager.cmj : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmj
 o ExpressDefaultRequestManager.cmt : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmt
@@ -43,8 +55,16 @@ o ExpressDefaultResponseManager.cmi : cp ..\bs\rescript\src\ExpressDefaultRespon
 o ExpressDefaultResponseManager.cmj : cp ..\bs\rescript\src\ExpressDefaultResponseManager.cmj
 o ExpressDefaultResponseManager.cmt : cp ..\bs\rescript\src\ExpressDefaultResponseManager.cmt
 o ExpressDefaultResponseManager.res : cp ..\..\rescript\src\ExpressDefaultResponseManager.res
+o ExpressParseUrlHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmi
+o ExpressParseUrlHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmj
+o ExpressParseUrlHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmt
+o ExpressParseUrlHandlerConverter.res : cp ..\..\rescript\src\ExpressParseUrlHandlerConverter.res
 o ExpressDefaultServerConfigurator.cmi : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmi
 o ExpressDefaultServerConfigurator.cmj : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmj
 o ExpressDefaultServerConfigurator.cmt : cp ..\bs\rescript\src\ExpressDefaultServerConfigurator.cmt
 o ExpressDefaultServerConfigurator.res : cp ..\..\rescript\src\ExpressDefaultServerConfigurator.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj 
+o ExpressParseJsonHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmi
+o ExpressParseJsonHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmj
+o ExpressParseJsonHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmt
+o ExpressParseJsonHandlerConverter.res : cp ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressNewServerMiddlewaresTest.cmi ExpressNewServerMiddlewaresTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 
