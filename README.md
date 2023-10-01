@@ -4,6 +4,7 @@ extemdable rescript server and routes builder
 
 ## Example of usage
 ```rescript
+//file ExpressPublicUsageCase.res
 open ExpressServer
 open ExpressHandler
 open ExpressParseUrlHandlerConverter
@@ -67,6 +68,7 @@ runServer(routes, [], 80, () => {Js.Console.log("Server started!")})
 ## Express server
 ExpressServer has simple signature to server running
 ```rescript
+//file ExpressServer.res
 open Belt
 
 type request
@@ -121,6 +123,8 @@ this modified versions: `handler' = (req' => res')`, and convert this function
 into default `handler` type.
 
 ```rescript
+//file ExpressHandler.res
+
 //Handler is some module with signature:
 module type Handler = {
     type hReq
@@ -151,6 +155,7 @@ allowa chain of conversations.
 
 This modules defining with ExpressHandlerChain.Make functor:
 ```rescript
+//file ExpressHandlerChain.res
 module type Make = (
     OldHandler: Handler, 
     Converter: Converter //minimal module for building HandlerChain. See later..
@@ -165,6 +170,7 @@ module type Make = (
 ## Default Handler
 its required for be used as last chain part in handlers chain
 ```rescript
+//file ExpressHandler.res
 module DefaultErrorStrategy: ErrorStrategy = {
     let wrapTryCatch: (() => unit) => unit =
         (handler) => try {
@@ -182,6 +188,7 @@ module MakeDefault: MakeDefault = (ErrorStrategy: ErrorStrategy) => ...
 ## ExpressHandlerConverter
 is a minimal required module functionality for creation HandlerMiddleware chain.
 ```rescript
+//file ExpressHandlerChain.res
 module type Converter = {
     type oldReq
     type newReq
@@ -202,6 +209,7 @@ Implement this module and you will make build chain of handlers
 ### ExpressParseUrlHandlerConverter
 needs for parsing params from url of GET request
 ```rescript
+//file ExpressParseUrlHandlerConverter.res
 type urlReq<'a> = UrlReq('a, unknown)
 
 module type T = (OldHandler: Handler) =>
@@ -217,6 +225,7 @@ module Make: T = (OldHandler: Handler) => ...
 ### ExpressJsonHandlerConverter
 needs for parsing json-request-body from POST request
 ```rescript
+//file ExpressJsonHandlerConverter.res
 type jsonReq<'a> = JsonReq('a, unknown)
 
 module type T = (OldHandler: Handler) =>
@@ -232,6 +241,7 @@ module Make: T = (OldHandler: Handler) => ...
 ### ExpressSessionHandlerConverter
 needs for parsing session data and handle session-effects
 ```rescript
+//file ExpressSessionHandlerConverter.res
 type sessionReq<'a> = SessionReq('a, unknown)
 type sessionEffect = 
     | SetSessionValue(string, unknown)
@@ -267,6 +277,7 @@ module Make: T = (OldHandler: Handler, SessionConfigurator: SessionConfigurator)
 ### ExpressFileHandlerConverter
 needs for building routes awaits file uploading and get access to files
 ```rescript
+//file ExpressFileHandlerConverter.res
 type fileAwaitField = {
     name: string,
     maxCount: int
