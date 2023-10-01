@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 3605d0d45320465f8d09979cdd65a3e4 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash e86482fa072d1e7c29d87f8ecfd1de90 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -23,9 +23,9 @@ o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\s
 o rescript\src\ExpressHandler.ast : astj ..\..\rescript\src\ExpressHandler.res
 o rescript\src\ExpressHandler.d : deps rescript\src\ExpressHandler.ast
 o rescript\src\ExpressHandler.cmj rescript\src\ExpressHandler.cmi ..\js\rescript\src\ExpressHandler.bs.js : mij rescript\src\ExpressHandler.ast
-o rescript\src\ExpressHandlerMiddleware.ast : astj ..\..\rescript\src\ExpressHandlerMiddleware.res
-o rescript\src\ExpressHandlerMiddleware.d : deps rescript\src\ExpressHandlerMiddleware.ast
-o rescript\src\ExpressHandlerMiddleware.cmj rescript\src\ExpressHandlerMiddleware.cmi ..\js\rescript\src\ExpressHandlerMiddleware.bs.js : mij rescript\src\ExpressHandlerMiddleware.ast
+o rescript\src\ExpressHandlerChain.ast : astj ..\..\rescript\src\ExpressHandlerChain.res
+o rescript\src\ExpressHandlerChain.d : deps rescript\src\ExpressHandlerChain.ast
+o rescript\src\ExpressHandlerChain.cmj rescript\src\ExpressHandlerChain.cmi ..\js\rescript\src\ExpressHandlerChain.bs.js : mij rescript\src\ExpressHandlerChain.ast
 o rescript\src\ExpressFileHandlerConverter.ast : astj ..\..\rescript\src\ExpressFileHandlerConverter.res
 o rescript\src\ExpressFileHandlerConverter.d : deps rescript\src\ExpressFileHandlerConverter.ast
 o rescript\src\ExpressFileHandlerConverter.cmj rescript\src\ExpressFileHandlerConverter.cmi ..\js\rescript\src\ExpressFileHandlerConverter.bs.js : mij rescript\src\ExpressFileHandlerConverter.ast

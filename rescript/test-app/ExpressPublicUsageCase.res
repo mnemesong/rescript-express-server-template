@@ -3,15 +3,15 @@ open ExpressHandler
 open ExpressParseUrlHandlerConverter
 open ExpressParseJsonHandlerConverter
 open ExpressFileHandlerConverter
-open! ExpressHandlerMiddleware
+open! ExpressHandlerChain
 
 //Defaultly server await "handler" type = Handler(array<middlewares>, (req, res) => unit)
 //Handler modules allow to modify request and response and write hanlder-func use
 //this modified versions: (req' => res'), and convert this funciton
 //into default "handler" type
-module Default = MakeDefault(DefaultErrorStrategy) //default handler builder
-module QueryConverter = ExpressParseUrlHandlerConverter.Make(Default)
-module QueryHandler = Make( Default, QueryConverter ) //parse url handler
+module DefaultHandler = MakeDefault(DefaultErrorStrategy) //default handler builder
+module QueryConverter = ExpressParseUrlHandlerConverter.Make(DefaultHandler)
+module QueryHandler = Make( DefaultHandler, QueryConverter ) //parse url handler
 module JsonConverter = ExpressParseJsonHandlerConverter.Make(QueryHandler)
 module JsonHandler = Make( QueryHandler, JsonConverter ) //parse json-post-body handler
 module FileParseConfig: FileParseConfig = {

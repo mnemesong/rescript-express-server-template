@@ -23,10 +23,10 @@ o ExpressHandler.cmi : cp ..\bs\rescript\src\ExpressHandler.cmi
 o ExpressHandler.cmj : cp ..\bs\rescript\src\ExpressHandler.cmj
 o ExpressHandler.cmt : cp ..\bs\rescript\src\ExpressHandler.cmt
 o ExpressHandler.res : cp ..\..\rescript\src\ExpressHandler.res
-o ExpressHandlerMiddleware.cmi : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmi
-o ExpressHandlerMiddleware.cmj : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmj
-o ExpressHandlerMiddleware.cmt : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmt
-o ExpressHandlerMiddleware.res : cp ..\..\rescript\src\ExpressHandlerMiddleware.res
+o ExpressHandlerChain.cmi : cp ..\bs\rescript\src\ExpressHandlerChain.cmi
+o ExpressHandlerChain.cmj : cp ..\bs\rescript\src\ExpressHandlerChain.cmj
+o ExpressHandlerChain.cmt : cp ..\bs\rescript\src\ExpressHandlerChain.cmt
+o ExpressHandlerChain.res : cp ..\..\rescript\src\ExpressHandlerChain.res
 o ExpressFileHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmi
 o ExpressFileHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmj
 o ExpressFileHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmt
@@ -43,4 +43,4 @@ o ExpressParseJsonHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseJsonH
 o ExpressParseJsonHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmj
 o ExpressParseJsonHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmt
 o ExpressParseJsonHandlerConverter.res : cp ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressPublicUsageCase.cmi ExpressPublicUsageCase.cmj ExpressServerMiddlewaresTest.cmi ExpressServerMiddlewaresTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressPublicUsageCase.cmi ExpressPublicUsageCase.cmj ExpressServerMiddlewaresTest.cmi ExpressServerMiddlewaresTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressHandlerChain.cmi ExpressHandlerChain.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 

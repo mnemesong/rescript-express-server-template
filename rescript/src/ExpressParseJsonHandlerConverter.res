@@ -1,6 +1,6 @@
 open ExpressServer
 open ExpressHandler
-open ExpressHandlerMiddleware
+open ExpressHandlerChain
 
 type jsonReq<'a> = JsonReq('a, unknown)
 

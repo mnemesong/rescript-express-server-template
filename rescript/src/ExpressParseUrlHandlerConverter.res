@@ -1,6 +1,6 @@
 open ExpressServer
 open ExpressHandler
-open ExpressHandlerMiddleware
+open ExpressHandlerChain
 
 %%raw(`
 const express = require("express");

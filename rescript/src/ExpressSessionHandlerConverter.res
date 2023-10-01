@@ -1,6 +1,6 @@
 open ExpressServer
 open ExpressHandler
-open ExpressHandlerMiddleware
+open ExpressHandlerChain
 open Belt
 
 %%raw(`

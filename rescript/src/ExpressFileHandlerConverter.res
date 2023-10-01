@@ -1,6 +1,6 @@
 open ExpressServer
 open ExpressHandler
-open ExpressHandlerMiddleware
+open ExpressHandlerChain
 
 %%raw(`
 const express = require("express");
@@ -47,7 +47,6 @@ module Make: T = (OldHandler: Handler, FileParseConfig: FileParseConfig) => {
         let (req, _) = OldHandler.primalReq(oldReq)
         let parse: (request) => array<fileParsedField> = %raw(`
             function(req) {
-                console.log(req.files );
                 const files = req.files 
                     ? JSON.parse(JSON.stringify(req.files)) 
                     : {};

@@ -4,11 +4,11 @@ open ExpressParseUrlHandlerConverter
 open ExpressParseJsonHandlerConverter
 open ExpressSessionHandlerConverter
 open ExpressFileHandlerConverter
-open! ExpressHandlerMiddleware
+open! ExpressHandlerChain
 
-module Default = MakeDefault(DefaultErrorStrategy)
-module QueryConverter = ExpressParseUrlHandlerConverter.Make(Default)
-module QueryHandler = Make( Default, QueryConverter )
+module DefaultHandler = MakeDefault(DefaultErrorStrategy)
+module QueryConverter = ExpressParseUrlHandlerConverter.Make(DefaultHandler)
+module QueryHandler = Make( DefaultHandler, QueryConverter )
 module JsonConverter = ExpressParseJsonHandlerConverter.Make(QueryHandler)
 module JsonHandler = Make( QueryHandler, JsonConverter )
 module SessionConverter = ExpressSessionHandlerConverter.Make(
@@ -27,10 +27,10 @@ module FileConverter =
 module FileHandler = Make( SessionHandler, FileConverter )
 
 module OnlySessionConverter = ExpressSessionHandlerConverter.Make(
-    Default, 
+    DefaultHandler, 
     ExpressSessionHandlerConverter.DefaultConfigurator
 )
-module OnlySessionHandler = Make(Default, OnlySessionConverter)
+module OnlySessionHandler = Make(DefaultHandler, OnlySessionConverter)
 
 let testFilePath: string = %raw(`
     require('path').resolve(module.path, '..', '..', '..', '..', 'resources', 'test-file.txt')
