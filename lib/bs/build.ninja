@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressNewServerTest.ast : astj ..\..\rescript\test-app\ExpressNewServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash bd456384d2aa0fb23c466c43cc1d6144 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 15eb6b1b48dc0bdb8cea5a562bf56ff1 $in
   restat = 1
 o rescript\test-app\ExpressNewServerTest.d : deps rescript\test-app\ExpressNewServerTest.ast
 rule mij
@@ -11,6 +11,9 @@ rule mij
   dyndep = 1
   restat = 1
 o rescript\test-app\ExpressNewServerTest.cmj rescript\test-app\ExpressNewServerTest.cmi ..\js\rescript\test-app\ExpressNewServerTest.bs.js : mij rescript\test-app\ExpressNewServerTest.ast
+o rescript\test-app\ExpressPublicUsageCase.ast : astj ..\..\rescript\test-app\ExpressPublicUsageCase.res
+o rescript\test-app\ExpressPublicUsageCase.d : deps rescript\test-app\ExpressPublicUsageCase.ast
+o rescript\test-app\ExpressPublicUsageCase.cmj rescript\test-app\ExpressPublicUsageCase.cmi ..\js\rescript\test-app\ExpressPublicUsageCase.bs.js : mij rescript\test-app\ExpressPublicUsageCase.ast
 o rescript\test-app\ExpressNewServerMiddlewaresTest.ast : astj ..\..\rescript\test-app\ExpressNewServerMiddlewaresTest.res
 o rescript\test-app\ExpressNewServerMiddlewaresTest.d : deps rescript\test-app\ExpressNewServerMiddlewaresTest.ast
 o rescript\test-app\ExpressNewServerMiddlewaresTest.cmj rescript\test-app\ExpressNewServerMiddlewaresTest.cmi ..\js\rescript\test-app\ExpressNewServerMiddlewaresTest.bs.js : mij rescript\test-app\ExpressNewServerMiddlewaresTest.ast

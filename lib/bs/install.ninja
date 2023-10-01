@@ -7,6 +7,10 @@ o ExpressNewServerTest.cmi : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmi
 o ExpressNewServerTest.cmj : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmj
 o ExpressNewServerTest.cmt : cp ..\bs\rescript\test-app\ExpressNewServerTest.cmt
 o ExpressNewServerTest.res : cp ..\..\rescript\test-app\ExpressNewServerTest.res
+o ExpressPublicUsageCase.cmi : cp ..\bs\rescript\test-app\ExpressPublicUsageCase.cmi
+o ExpressPublicUsageCase.cmj : cp ..\bs\rescript\test-app\ExpressPublicUsageCase.cmj
+o ExpressPublicUsageCase.cmt : cp ..\bs\rescript\test-app\ExpressPublicUsageCase.cmt
+o ExpressPublicUsageCase.res : cp ..\..\rescript\test-app\ExpressPublicUsageCase.res
 o ExpressNewServerMiddlewaresTest.cmi : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmi
 o ExpressNewServerMiddlewaresTest.cmj : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmj
 o ExpressNewServerMiddlewaresTest.cmt : cp ..\bs\rescript\test-app\ExpressNewServerMiddlewaresTest.cmt
@@ -39,4 +43,4 @@ o ExpressParseJsonHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseJsonH
 o ExpressParseJsonHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmj
 o ExpressParseJsonHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmt
 o ExpressParseJsonHandlerConverter.res : cp ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
-build install.stamp : touch ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressNewServerMiddlewaresTest.cmi ExpressNewServerMiddlewaresTest.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 
+build install.stamp : touch ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressPublicUsageCase.cmi ExpressPublicUsageCase.cmj ExpressNewServerMiddlewaresTest.cmi ExpressNewServerMiddlewaresTest.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 

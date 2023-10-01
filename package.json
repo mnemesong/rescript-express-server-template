@@ -6,7 +6,8 @@
   "scripts": {
     "res:build": "rescript",
     "res:dev": "rescript build -w",
-    "test:newserver": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs",
+    "test:server": "node ./lib/js/rescript/test-app/ExpressNewServerTest.bs",
+    "test:usecase": "node ./lib/js/rescript/test-app/ExpressPublicUsageCase.bs",
     "test:middlewares": "node ./lib/js/rescript/test-app/ExpressNewServerMiddlewaresTest.bs"
   },
   "repository": {
