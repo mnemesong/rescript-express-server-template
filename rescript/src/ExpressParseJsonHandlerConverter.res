@@ -2,12 +2,12 @@ open ExpressServer
 open ExpressHandler
 open ExpressHandlerChain
 
-type jsonReq<'a> = JsonReq('a, unknown)
-
 %%raw(`
 const express = require("express");
 const multer = require("multer");
 `)
+
+type jsonReq<'a> = JsonReq('a, unknown)
 
 module type T = (OldHandler: Handler) =>
     Converter

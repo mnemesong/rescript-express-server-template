@@ -1,224 +1,310 @@
 # rescript-express-server-template
 extemdable rescript server and routes builder
 
-## Example of code
+
+## Example of usage
 ```rescript
-open ExpressServerTemplate
+open ExpressServer
+open ExpressHandler
+open ExpressParseUrlHandlerConverter
+open ExpressParseJsonHandlerConverter
+open ExpressFileHandlerConverter
+open! ExpressHandlerMiddleware
 
-let testFilePath: string = %raw(`
-    require('path').resolve(module.path, '..', '..', '..', '..', 'resources', 'test-file.txt')
-`) //test file path
+//Defaultly server await "handler" type = Handler(array<middlewares>, (req, res) => unit)
+//Handler modules allow to modify request and response and write hanlder-func use
+//this modified versions: (req' => res'), and convert this funciton
+//into default "handler" type
+module Default = MakeDefault(DefaultErrorStrategy) //default handler builder
+module QueryConverter = ExpressParseUrlHandlerConverter.Make(Default)
+module QueryHandler = Make( Default, QueryConverter ) //parse url handler
+module JsonConverter = ExpressParseJsonHandlerConverter.Make(QueryHandler)
+module JsonHandler = Make( QueryHandler, JsonConverter ) //parse json-post-body handler
+module FileParseConfig: FileParseConfig = {
+    let getFileAwaitFields: () => array<fileAwaitField> =
+        () => [{name: "fileInp", maxCount: 1}]
+    let getDestPath: () => string =
+        () => "/uploads"
+}
+module FileConverter = 
+    ExpressFileHandlerConverter.Make(JsonHandler, FileParseConfig)
+module FileHandler = Make( JsonHandler, FileConverter ) //files loading handler
 
-//Page html
 let indexPageHtml = `
-<form action="/apply-post" method="post">
+<form action="/apply-post" method="post" enctype="multipart/form-data">
     <h1>Test form</h1>
     <input name="textInp" value="" style="display: block;">
     <textarea name="textAr" style="display: block;"></textarea>
+    <input type="file" name="fileInp" style="display: block;">
     <input type="submit" style="display: block;">
-</form>
-<div>
-    <button type="button" onclick="window.open('/download-file');">download file</button>
-    <button type="button" onclick="window.open('/set-session');">set session</button>
-    <button type="button" onclick="window.open('/delete-session');">delete session</button>
-</div>
-`
+</form>` //page html
 
-//functions for parsing unknown
-let parseUnknownAsString: (unknown) => option<string> = 
-%raw(` function(val) {
-    return (val && (typeof val === 'string'))
-        ? val
-        : null;
-} `)
-let parseUnknownObjectProperty: (unknown, string, (unknown) => option<'a>) => option<'a> =
-%raw(` function(obj, prop, parser) {
-    return (obj[prop]) ? parser(obj[prop]) : null;
-} `)
+let stringifyAny: ('a) => string = %raw(`function (u) {
+    return u ? JSON.stringify(u) : ""
+}`)
 
-//routes
-type parsedVals = {
-    textInp: option<string>,
-    textAr: option<string>,
-}
-let routes: array<ExpressServerConfiguratorTemplate.route> = [
-    Route(#get, "/", Default((_) => //get index page
-        OnlyResponse(Html(indexPageHtml)))),
-    Route(#post, "/apply-post", Default((req) => { //apply post form from index page
-        let reqVals: parsedVals = ({
-            textInp: parseUnknownObjectProperty(
-                req.bodyData, 
-                "textInp", 
-                parseUnknownAsString
-            ),
-            textAr: parseUnknownObjectProperty(
-                req.bodyData, 
-                "textAr", 
-                parseUnknownAsString
-            ),
-        })
-        let result = Js.Json.stringifyAny(reqVals)
-        switch result {
-            |Some(a) => OnlyResponse(Json(a))
-            |None => OnlyResponse(Json("{}"))
-        }
+let routes = [
+    Route(#get, "/", QueryHandler.handler(r => { //show form and show get-query
+        let UrlReq(_, urlData) = r
+        let unkToJson: (unknown) => string = %raw(`function(u) {
+            return JSON.stringify(u) + ""
+        }`)
+        let urlDataStr = unkToJson(urlData)
+        Html("Url data: " ++ urlDataStr ++ "<br><br>" ++ indexPageHtml)
     })),
-    Route(#get, "/download-file", Default((_) => { //download file
-        OnlyResponse(DownloadFile(testFilePath))
-    })),
-    Route(#get, "/show-session", Default((req) => { //show current session val
-        let sessionVal = parseUnknownObjectProperty(req.session, "sessionVal", parseUnknownAsString)
-        let printVal = switch(sessionVal) {
-            | Some(v) => v
-            | None => ""
-        }
-        OnlyResponse(Html("Session-val: " ++ printVal))
-    })),
-    Route(#get, "/set-session", Default((_) => { //set session-val = 11 and redirect
-        ResponseWithEffects(
-            Redirect("/show-session", #303),
-            [RequestEffect(SetSessionVal("sessionVal", %raw(`"11"`)))]
-        )
-    })),
-    Route(#get, "/delete-session", Default((_) => { //remove session-val and redirect
-        ResponseWithEffects(
-            Redirect("/show-session", #303),
-            [RequestEffect(DestroySession)]
-        )
+    Route(#post, "/apply-post", FileHandler.handler(r => { //form handler and show data
+        let FileReq(JsonReq(_, json), files) = r
+        let json = `{"json": "${stringifyAny(json)}",
+        "files": "${stringifyAny(files)}"}`
+        Json(json)
     })),
 ]
 
-// build  server config
-let serverConfig = ExpressServerConfiguratorTemplate.buildConfig(routes, 80, () => {
-    Js.Console.log("Server had been started")
-})
-
-// run server
-ExpressServerTemplate.run(serverConfig)
+runServer(routes, [], 80, () => {Js.Console.log("Server started!")})
 ```
 
-## Default server
-ExpressServerConfiguratorTemplate module help to build default routes kind of
+
+## Express server
+ExpressServer has simple signature to server running
 ```rescript
-type serverRespType = 
-    | Html(string)
-    | Json(string)
-    | OpenFile(string)
-    | DownloadFile(string)
-    | Redirect(string, redirectStatus)
-    | Error(string, errorStatus)
+open Belt
 
-Route(
-    method: [ #get | #post | #put | ...],
-    routePath: string,
-    handlerFunction:  
-        | Default((req: {
-            queryParams: unknown, //for get reqs
-            bodyData: unknown, //for post reqs,
-            session: unknown, //session store
-        }) => serverRespType)
-        | Multipart((req: {
-            queryParams: unknown, //for get reqs
-            bodyData: unknown, //for post req
-            session: unknown, //session store
-            files: unknown, //downloaded files
-        }) => serverRespType)
-)
+type request
+type response
+type middleware
+type expressApp
+
+type routeType =
+    [ #checkout
+    | #copy
+    | #get
+    | #delete
+    | #head
+    | #lock
+    | #merge
+    | #mkactivity
+    | #mkcol
+    | #move
+    | #notify
+    | #options
+    | #patch
+    | #post
+    | #purge
+    | #put
+    | #report
+    | #search
+    | #subscribe
+    | #trace
+    | #unlock
+    | #unsubscribe
+    ]
+type scenario = (request, response) => unit
+type handler = Handler(array<middleware>, scenario)
+
+type url = string
+
+type route = Route(routeType, url, handler)
+
+let runServer = (
+    routes: array<route>,
+    middlewares: array<middleware>,
+    port: int,
+    onInit: () => unit
+): unit
 ```
-next build server config from array of routes and run the server
+
+
+## ExpressHandler
+Defaultly server await handler: `type handler = Handler(array<middlewares>, (req, res) => unit)`
+Handler modules allow to modify request and response and write hanlder-func use
+this modified versions: `handler' = (req' => res')`, and convert this function
+into default `handler` type.
+
 ```rescript
-// build  server config
-let serverConfig = ExpressServerConfiguratorTemplate.buildConfig(
-    routes, //array of routes
-    80, //port 
-    () => { Js.Console.log("Server had been started") }) //on init handler
+//Handler is some module with signature:
+module type Handler = {
+    type hReq
+    type hRes
 
-// run server
-ExpressServerTemplate.run(serverConfig)
+    let wrapReq: ((request, response)) => hReq
+    let applyRes: (hReq, hRes) => unit
+    let primalReq: (hReq) => (request, response)
+    let convert: 
+        (hReq => hRes) => (request, response) => unit
+    let middlewares: array<middleware>
+    let handler: (hReq => hRes) => handler
+}
+//which may be used as
+...
+Route(#get, "/", SomeHanderModule.handler(someF: req'=>res'))
+//               ^will be converted into ------------------^
+//                Handler(array<middlewares>, (request, response) => unit)
+...
 ```
+where `someF: req' => res'` is handler-function writen on confortable for coding and 
+reading language. Handler module allows this funciton conversation.
 
-## Extensibility
-ExpressServerConfiguratorFactory functor will help you define your own route 
-configurator.
+
+## ExpressHandlerChain
+Is a Module of Hanlder type which allows depends with some old Handler and
+allowa chain of conversations. 
+
+This modules defining with ExpressHandlerChain.Make functor:
 ```rescript
-type route<'a> = Route(routeType, path, 'a)
-
-type effect<'a, 'b> = 
-    | RequestEffect('a)
-    | ResponseEffect('b)
-
-type handlingResult<'a, 'b> = 
-    | OnlyResponse('a)
-    | ResponseWithEffects('a, array<'b>)
-
-//Logger type
-module type ILogger = {
-    type error
-
-    let catchUnknown: (() => 'a) => result<'a, error>
-    let logError: (error) => unit
-    let mapResultError: (result<unit, error>) => unit
-    let handleResultError: (result<unit, error>, (error) => unit) => unit
-    let raiseError: (error) => unit
-}
-
-// configurator type
-module type IExpressDefaultServerConfigurator = {
-    type requestHandling
-    type route
-
-    let buildConfig: (array<route>, port, () => unit) => serverStartConfig
-}
-
-//request manager for build and handling requests form unknown express types
-module type IExpressRequestManager = {
-    type requestHandling
-    type requestEffect
-    type error
-    type responseType
-    type responseEffect
-
-    let initMiddlewares: (unknown) => unit
-    let handleRequest: 
-        (requestHandling) => (unknown, unknown) => handlingResult<
-            responseType, 
-            effect<requestEffect, responseEffect>
-        >
-    let produceMiddlewares: (requestHandling) => array<middleware>
-    let handleEffect: (unknown, requestEffect) => unit
-}
-
-//response manager for build and handling responses form unknown express types
-module type IExpressResponseManager = {
-    type responseType
-    type responseEffect
-    type error
-
-    let initMiddlewares: (unknown) => unit
-    let handleEffect: (unknown, responseEffect) => unit
-    let handleResponse: (unknown, responseType) => unit
-    let handleInternalError: (unknown, error) => unit
-}
-
-//functor to produce configurator uses request-manager and response-manager
-module type IExpressDefaultServerConfiguratorFactory = (
-    Logger: ILogger, 
-    ResponseManager: IExpressResponseManager
-        with type error = Logger.error,
-    RequestManager: IExpressRequestManager
-        with type error = Logger.error
-        and type responseType = ResponseManager.responseType
-        and type responseEffect = ResponseManager.responseEffect
-) => IExpressDefaultServerConfigurator 
-    with type requestHandling = RequestManager.requestHandling
-    and type route = route<RequestManager.requestHandling>
+module type Make = (
+    OldHandler: Handler, 
+    Converter: Converter //minimal module for building HandlerChain. See later..
+        with type oldReq = OldHandler.hReq
+        and type oldRes = OldHandler.hRes
+) => Handler
+    with type hReq = Converter.newReq
+    and type hRes = Converter.newRes
 ```
-ready ExpressDefaultServerConfiguratorFactory functor exists in module
-ExpressDefaultServerConfigurator
+
+
+## Default Handler
+its required for be used as last chain part in handlers chain
+```rescript
+module DefaultErrorStrategy: ErrorStrategy = {
+    let wrapTryCatch: (() => unit) => unit =
+        (handler) => try {
+            handler()
+        } catch {
+            | Js.Exn.Error(obj) => Js.Console.log(obj)
+            | _ => Js.Console.log("unknown error")
+        }
+}
+module type MakeDefault = (ErrorStrategy: ErrorStrategy) => Default
+module MakeDefault: MakeDefault = (ErrorStrategy: ErrorStrategy) => ...
+```
+
+
+## ExpressHandlerConverter
+is a minimal required module functionality for creation HandlerMiddleware chain.
+```rescript
+module type Converter = {
+    type oldReq
+    type newReq
+    type oldRes
+    type newRes
+
+    let wrapStepReq: (oldReq) => newReq
+    let getOldReq: (newReq) => oldReq
+    let applyStepRes: (newReq, newRes) => oldRes
+    let middlewares: array<middleware>
+}
+```
+Implement this module and you will make build chain of handlers
+
+
+## Standart Handler Converters
+
+### ExpressParseUrlHandlerConverter
+needs for parsing params from url of GET request
+```rescript
+type urlReq<'a> = UrlReq('a, unknown)
+
+module type T = (OldHandler: Handler) =>
+    Converter
+        with type oldReq = OldHandler.hReq
+        and type newReq = urlReq<OldHandler.hReq>
+        and type oldRes = OldHandler.hRes
+        and type newRes = OldHandler.hRes
+
+module Make: T = (OldHandler: Handler) => ...
+```
+
+### ExpressJsonHandlerConverter
+needs for parsing json-request-body from POST request
+```rescript
+type jsonReq<'a> = JsonReq('a, unknown)
+
+module type T = (OldHandler: Handler) =>
+    Converter
+        with type oldReq = OldHandler.hReq
+        and type newReq = jsonReq<OldHandler.hReq>
+        and type oldRes = OldHandler.hRes
+        and type newRes = OldHandler.hRes
+
+module Make: T = (OldHandler: Handler) => ...
+```
+
+### ExpressSessionHandlerConverter
+needs for parsing session data and handle session-effects
+```rescript
+type sessionReq<'a> = SessionReq('a, unknown)
+type sessionEffect = 
+    | SetSessionValue(string, unknown)
+    | DestroySession
+type sessionRes<'a> = SessionRes('a, array<sessionEffect>)
+
+type sessionParam =
+    | SessionResave(bool)
+    | SessionSaveUnitialized(bool)
+    | Cookie(bool, option<int>)
+
+type sessionConfig = SessionConfig(string, array<sessionParam>)
+
+module type SessionConfigurator ={
+    let getSessionConfig: () => sessionConfig
+}
+//for example:
+//module DefaultConfigurator: SessionConfigurator = {
+//    let getSessionConfig: () => sessionConfig = 
+//        () => SessionConfig("dksand9u7sa9db9", [])
+//}
+
+module type T = (OldHandler: Handler, SessionConfigurator: SessionConfigurator) =>
+    Converter
+        with type oldReq = OldHandler.hReq
+        and type newReq = sessionReq<OldHandler.hReq>
+        and type oldRes = OldHandler.hRes
+        and type newRes = sessionRes<OldHandler.hRes>
+
+module Make: T = (OldHandler: Handler, SessionConfigurator: SessionConfigurator) => ...
+```
+
+### ExpressFileHandlerConverter
+needs for building routes awaits file uploading and get access to files
+```rescript
+type fileAwaitField = {
+    name: string,
+    maxCount: int
+}
+
+type file = {
+    fieldname: string,
+    originalname: string,
+    encoding: string,
+    mimetype: string,
+    destination: string,
+    filename: string,
+    path: string,
+    size: int
+}
+type fileParsedField = {fileName: string, files: array<file>}
+type fileReq<'a> = FileReq('a, array<fileParsedField>)
+
+module type FileParseConfig = {
+    let getFileAwaitFields: () => array<fileAwaitField>
+    let getDestPath: () => string
+}
+
+module type T = (OldHandler: Handler, FileParseConfig: FileParseConfig) =>
+    Converter
+        with type oldReq = OldHandler.hReq
+        and type newReq = fileReq<OldHandler.hReq>
+        and type oldRes = OldHandler.hRes
+        and type newRes = OldHandler.hRes
+
+module Make: T = (OldHandler: Handler, FileParseConfig: FileParseConfig) => ...
+```
+
 
 ## Author
 Anatoly Starodubtsev
 tostar74@mail.ru
+
 
 # License
 MIT
