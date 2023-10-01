@@ -32,8 +32,8 @@ module Make: T = (OldHandler: Handler) => {
             UrlReq(oldReq, parse(req))
         }
 
-    let applyStepRes: (newRes) => oldRes =
-        (newRes) => newRes
+    let applyStepRes: (newReq, newRes) => oldRes =
+        (_, newRes) => newRes
 
     let getOldReq: (newReq) => oldReq =
         (newReq) => {

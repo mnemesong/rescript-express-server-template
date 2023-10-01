@@ -10,7 +10,7 @@ module type Converter = {
 
     let wrapStepReq: (oldReq) => newReq
     let getOldReq: (newReq) => oldReq
-    let applyStepRes: (newRes) => oldRes
+    let applyStepRes: (newReq, newRes) => oldRes
     let middlewares: array<middleware>
 }
 
@@ -41,8 +41,8 @@ module Make: Make = (
         OldHandler.wrapReq(r)->Converter.wrapStepReq
 
     let applyRes: (hReq, hRes) => unit = 
-        (req, res) => 
-            OldHandler.applyRes(Converter.getOldReq(req), Converter.applyStepRes(res))
+        (hReq, hRes) => 
+            OldHandler.applyRes(Converter.getOldReq(hReq), Converter.applyStepRes(hReq, hRes))
 
     let convert = (handler: hReq => hRes): ((request, response) => unit) => 
         (req, res) => wrapReq((req, res))->handler|>applyRes(wrapReq((req, res)))

@@ -47,6 +47,10 @@ o ExpressHandlerMiddleware.cmi : cp ..\bs\rescript\src\ExpressHandlerMiddleware.
 o ExpressHandlerMiddleware.cmj : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmj
 o ExpressHandlerMiddleware.cmt : cp ..\bs\rescript\src\ExpressHandlerMiddleware.cmt
 o ExpressHandlerMiddleware.res : cp ..\..\rescript\src\ExpressHandlerMiddleware.res
+o ExpressFileHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmi
+o ExpressFileHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmj
+o ExpressFileHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressFileHandlerConverter.cmt
+o ExpressFileHandlerConverter.res : cp ..\..\rescript\src\ExpressFileHandlerConverter.res
 o ExpressDefaultRequestManager.cmi : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmi
 o ExpressDefaultRequestManager.cmj : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmj
 o ExpressDefaultRequestManager.cmt : cp ..\bs\rescript\src\ExpressDefaultRequestManager.cmt
@@ -55,6 +59,10 @@ o ExpressDefaultResponseManager.cmi : cp ..\bs\rescript\src\ExpressDefaultRespon
 o ExpressDefaultResponseManager.cmj : cp ..\bs\rescript\src\ExpressDefaultResponseManager.cmj
 o ExpressDefaultResponseManager.cmt : cp ..\bs\rescript\src\ExpressDefaultResponseManager.cmt
 o ExpressDefaultResponseManager.res : cp ..\..\rescript\src\ExpressDefaultResponseManager.res
+o ExpressSessionHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressSessionHandlerConverter.cmi
+o ExpressSessionHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressSessionHandlerConverter.cmj
+o ExpressSessionHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressSessionHandlerConverter.cmt
+o ExpressSessionHandlerConverter.res : cp ..\..\rescript\src\ExpressSessionHandlerConverter.res
 o ExpressParseUrlHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmi
 o ExpressParseUrlHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmj
 o ExpressParseUrlHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseUrlHandlerConverter.cmt
@@ -67,4 +75,4 @@ o ExpressParseJsonHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseJsonH
 o ExpressParseJsonHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmj
 o ExpressParseJsonHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmt
 o ExpressParseJsonHandlerConverter.res : cp ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressNewServerMiddlewaresTest.cmi ExpressNewServerMiddlewaresTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressNewServerTest.cmi ExpressNewServerTest.cmj ExpressServerTemplateTest.cmi ExpressServerTemplateTest.cmj ExpressNewServerMiddlewaresTest.cmi ExpressNewServerMiddlewaresTest.cmj ExpressDefaultServerConfiguratorTest.cmi ExpressDefaultServerConfiguratorTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressNewServer.cmi ExpressNewServer.cmj ExpressDefaultLogger.cmi ExpressDefaultLogger.cmj ExpressServerTemplate.cmi ExpressServerTemplate.cmj ExpressHandlerMiddleware.cmi ExpressHandlerMiddleware.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressDefaultRequestManager.cmi ExpressDefaultRequestManager.cmj ExpressDefaultResponseManager.cmi ExpressDefaultResponseManager.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressDefaultServerConfigurator.cmi ExpressDefaultServerConfigurator.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 

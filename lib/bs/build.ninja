@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 1caee7360cc75109d8ad357877c155ec $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash 6917e9fdf754970699714be7ac356f74 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -41,12 +41,18 @@ o rescript\src\ExpressServerTemplate.cmj rescript\src\ExpressServerTemplate.cmi 
 o rescript\src\ExpressHandlerMiddleware.ast : astj ..\..\rescript\src\ExpressHandlerMiddleware.res
 o rescript\src\ExpressHandlerMiddleware.d : deps rescript\src\ExpressHandlerMiddleware.ast
 o rescript\src\ExpressHandlerMiddleware.cmj rescript\src\ExpressHandlerMiddleware.cmi ..\js\rescript\src\ExpressHandlerMiddleware.bs.js : mij rescript\src\ExpressHandlerMiddleware.ast
+o rescript\src\ExpressFileHandlerConverter.ast : astj ..\..\rescript\src\ExpressFileHandlerConverter.res
+o rescript\src\ExpressFileHandlerConverter.d : deps rescript\src\ExpressFileHandlerConverter.ast
+o rescript\src\ExpressFileHandlerConverter.cmj rescript\src\ExpressFileHandlerConverter.cmi ..\js\rescript\src\ExpressFileHandlerConverter.bs.js : mij rescript\src\ExpressFileHandlerConverter.ast
 o rescript\src\ExpressDefaultRequestManager.ast : astj ..\..\rescript\src\ExpressDefaultRequestManager.res
 o rescript\src\ExpressDefaultRequestManager.d : deps rescript\src\ExpressDefaultRequestManager.ast
 o rescript\src\ExpressDefaultRequestManager.cmj rescript\src\ExpressDefaultRequestManager.cmi ..\js\rescript\src\ExpressDefaultRequestManager.bs.js : mij rescript\src\ExpressDefaultRequestManager.ast
 o rescript\src\ExpressDefaultResponseManager.ast : astj ..\..\rescript\src\ExpressDefaultResponseManager.res
 o rescript\src\ExpressDefaultResponseManager.d : deps rescript\src\ExpressDefaultResponseManager.ast
 o rescript\src\ExpressDefaultResponseManager.cmj rescript\src\ExpressDefaultResponseManager.cmi ..\js\rescript\src\ExpressDefaultResponseManager.bs.js : mij rescript\src\ExpressDefaultResponseManager.ast
+o rescript\src\ExpressSessionHandlerConverter.ast : astj ..\..\rescript\src\ExpressSessionHandlerConverter.res
+o rescript\src\ExpressSessionHandlerConverter.d : deps rescript\src\ExpressSessionHandlerConverter.ast
+o rescript\src\ExpressSessionHandlerConverter.cmj rescript\src\ExpressSessionHandlerConverter.cmi ..\js\rescript\src\ExpressSessionHandlerConverter.bs.js : mij rescript\src\ExpressSessionHandlerConverter.ast
 o rescript\src\ExpressParseUrlHandlerConverter.ast : astj ..\..\rescript\src\ExpressParseUrlHandlerConverter.res
 o rescript\src\ExpressParseUrlHandlerConverter.d : deps rescript\src\ExpressParseUrlHandlerConverter.ast
 o rescript\src\ExpressParseUrlHandlerConverter.cmj rescript\src\ExpressParseUrlHandlerConverter.cmi ..\js\rescript\src\ExpressParseUrlHandlerConverter.bs.js : mij rescript\src\ExpressParseUrlHandlerConverter.ast

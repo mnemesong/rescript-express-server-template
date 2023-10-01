@@ -6,6 +6,7 @@ type jsonReq<'a> = JsonReq('a, unknown)
 
 %%raw(`
 const express = require("express");
+const multer = require("multer");
 `)
 
 module type T = (OldHandler: Handler) =>
@@ -32,8 +33,8 @@ module Make: T = (OldHandler: Handler) => {
             JsonReq(oldReq, parse(req))
         }
 
-    let applyStepRes: (newRes) => oldRes =
-        (newRes) => newRes
+    let applyStepRes: (newReq, newRes) => oldRes =
+        (_, newRes) => newRes
 
     let getOldReq: (newReq) => oldReq =
         (newReq) => {
