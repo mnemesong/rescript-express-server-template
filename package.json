@@ -8,7 +8,8 @@
     "res:dev": "rescript build -w",
     "test:server": "node ./lib/js/rescript/test-app/ExpressServerTest.bs",
     "test:usecase": "node ./lib/js/rescript/test-app/ExpressPublicUsageCase.bs",
-    "test:middlewares": "node ./lib/js/rescript/test-app/ExpressServerMiddlewaresTest.bs"
+    "test:middlewares": "node ./lib/js/rescript/test-app/ExpressServerMiddlewaresTest.bs",
+    "test:auth": "node ./lib/js/rescript/test-app/ExpressSessionAuthTest.bs"
   },
   "repository": {
     "type": "git",

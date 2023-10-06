@@ -11,6 +11,10 @@ o ExpressPublicUsageCase.cmi : cp ..\bs\rescript\test-app\ExpressPublicUsageCase
 o ExpressPublicUsageCase.cmj : cp ..\bs\rescript\test-app\ExpressPublicUsageCase.cmj
 o ExpressPublicUsageCase.cmt : cp ..\bs\rescript\test-app\ExpressPublicUsageCase.cmt
 o ExpressPublicUsageCase.res : cp ..\..\rescript\test-app\ExpressPublicUsageCase.res
+o ExpressSessionAuthTest.cmi : cp ..\bs\rescript\test-app\ExpressSessionAuthTest.cmi
+o ExpressSessionAuthTest.cmj : cp ..\bs\rescript\test-app\ExpressSessionAuthTest.cmj
+o ExpressSessionAuthTest.cmt : cp ..\bs\rescript\test-app\ExpressSessionAuthTest.cmt
+o ExpressSessionAuthTest.res : cp ..\..\rescript\test-app\ExpressSessionAuthTest.res
 o ExpressServerMiddlewaresTest.cmi : cp ..\bs\rescript\test-app\ExpressServerMiddlewaresTest.cmi
 o ExpressServerMiddlewaresTest.cmj : cp ..\bs\rescript\test-app\ExpressServerMiddlewaresTest.cmj
 o ExpressServerMiddlewaresTest.cmt : cp ..\bs\rescript\test-app\ExpressServerMiddlewaresTest.cmt
@@ -43,4 +47,8 @@ o ExpressParseJsonHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressParseJsonH
 o ExpressParseJsonHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmj
 o ExpressParseJsonHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressParseJsonHandlerConverter.cmt
 o ExpressParseJsonHandlerConverter.res : cp ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
-build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressPublicUsageCase.cmi ExpressPublicUsageCase.cmj ExpressServerMiddlewaresTest.cmi ExpressServerMiddlewaresTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressHandlerChain.cmi ExpressHandlerChain.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj 
+o ExpressAuthSessionHandlerConverter.cmi : cp ..\bs\rescript\src\ExpressAuthSessionHandlerConverter.cmi
+o ExpressAuthSessionHandlerConverter.cmj : cp ..\bs\rescript\src\ExpressAuthSessionHandlerConverter.cmj
+o ExpressAuthSessionHandlerConverter.cmt : cp ..\bs\rescript\src\ExpressAuthSessionHandlerConverter.cmt
+o ExpressAuthSessionHandlerConverter.res : cp ..\..\rescript\src\ExpressAuthSessionHandlerConverter.res
+build install.stamp : touch ExpressServerTest.cmi ExpressServerTest.cmj ExpressPublicUsageCase.cmi ExpressPublicUsageCase.cmj ExpressSessionAuthTest.cmi ExpressSessionAuthTest.cmj ExpressServerMiddlewaresTest.cmi ExpressServerMiddlewaresTest.cmj ExpressServer.cmi ExpressServer.cmj ExpressHandler.cmi ExpressHandler.cmj ExpressHandlerChain.cmi ExpressHandlerChain.cmj ExpressFileHandlerConverter.cmi ExpressFileHandlerConverter.cmj ExpressSessionHandlerConverter.cmi ExpressSessionHandlerConverter.cmj ExpressParseUrlHandlerConverter.cmi ExpressParseUrlHandlerConverter.cmj ExpressParseJsonHandlerConverter.cmi ExpressParseJsonHandlerConverter.cmj ExpressAuthSessionHandlerConverter.cmi ExpressAuthSessionHandlerConverter.cmj 

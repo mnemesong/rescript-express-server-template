@@ -3,7 +3,7 @@ rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
 rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash e86482fa072d1e7c29d87f8ecfd1de90 $in
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash a5fb807b62f45249c51089fec0a4a358 $in
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
@@ -14,6 +14,9 @@ o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cm
 o rescript\test-app\ExpressPublicUsageCase.ast : astj ..\..\rescript\test-app\ExpressPublicUsageCase.res
 o rescript\test-app\ExpressPublicUsageCase.d : deps rescript\test-app\ExpressPublicUsageCase.ast
 o rescript\test-app\ExpressPublicUsageCase.cmj rescript\test-app\ExpressPublicUsageCase.cmi ..\js\rescript\test-app\ExpressPublicUsageCase.bs.js : mij rescript\test-app\ExpressPublicUsageCase.ast
+o rescript\test-app\ExpressSessionAuthTest.ast : astj ..\..\rescript\test-app\ExpressSessionAuthTest.res
+o rescript\test-app\ExpressSessionAuthTest.d : deps rescript\test-app\ExpressSessionAuthTest.ast
+o rescript\test-app\ExpressSessionAuthTest.cmj rescript\test-app\ExpressSessionAuthTest.cmi ..\js\rescript\test-app\ExpressSessionAuthTest.bs.js : mij rescript\test-app\ExpressSessionAuthTest.ast
 o rescript\test-app\ExpressServerMiddlewaresTest.ast : astj ..\..\rescript\test-app\ExpressServerMiddlewaresTest.res
 o rescript\test-app\ExpressServerMiddlewaresTest.d : deps rescript\test-app\ExpressServerMiddlewaresTest.ast
 o rescript\test-app\ExpressServerMiddlewaresTest.cmj rescript\test-app\ExpressServerMiddlewaresTest.cmi ..\js\rescript\test-app\ExpressServerMiddlewaresTest.bs.js : mij rescript\test-app\ExpressServerMiddlewaresTest.ast
@@ -38,3 +41,6 @@ o rescript\src\ExpressParseUrlHandlerConverter.cmj rescript\src\ExpressParseUrlH
 o rescript\src\ExpressParseJsonHandlerConverter.ast : astj ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
 o rescript\src\ExpressParseJsonHandlerConverter.d : deps rescript\src\ExpressParseJsonHandlerConverter.ast
 o rescript\src\ExpressParseJsonHandlerConverter.cmj rescript\src\ExpressParseJsonHandlerConverter.cmi ..\js\rescript\src\ExpressParseJsonHandlerConverter.bs.js : mij rescript\src\ExpressParseJsonHandlerConverter.ast
+o rescript\src\ExpressAuthSessionHandlerConverter.ast : astj ..\..\rescript\src\ExpressAuthSessionHandlerConverter.res
+o rescript\src\ExpressAuthSessionHandlerConverter.d : deps rescript\src\ExpressAuthSessionHandlerConverter.ast
+o rescript\src\ExpressAuthSessionHandlerConverter.cmj rescript\src\ExpressAuthSessionHandlerConverter.cmi ..\js\rescript\src\ExpressAuthSessionHandlerConverter.bs.js : mij rescript\src\ExpressAuthSessionHandlerConverter.ast

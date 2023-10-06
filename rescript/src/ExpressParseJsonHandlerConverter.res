@@ -4,7 +4,6 @@ open ExpressHandlerChain
 
 %%raw(`
 const express = require("express");
-const multer = require("multer");
 `)
 
 type jsonReq<'a> = JsonReq('a, unknown)
@@ -43,6 +42,7 @@ module Make: T = (OldHandler: Handler) => {
         }
 
     let middlewares: array<middleware> = [
+        %raw(`express.urlencoded({ extended: true })`),
         %raw(`express.json()`),
     ]
 }

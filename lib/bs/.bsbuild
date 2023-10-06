@@ -1,14 +1,16 @@
-10
+12
 ExpressServer
 ExpressHandler
 ExpressServerTest
 ExpressHandlerChain
 ExpressPublicUsageCase
+ExpressSessionAuthTest
 ExpressFileHandlerConverter
 ExpressServerMiddlewaresTest
 ExpressSessionHandlerConverter
 ExpressParseUrlHandlerConverter
 ExpressParseJsonHandlerConverter
+ExpressAuthSessionHandlerConverter
 rescript\src	rescript\test-app	
-1
+1
 0

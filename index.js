@@ -3,19 +3,26 @@ const path = require("path");
 const pathResolve = (srcName) => require(
         path.resolve(module.path, "lib", "js", "rescript", "src", srcName + ".bs"));
 
-module.exports.ExpressDefaultLogger = pathResolve("ExpressDefaultLogger");
+module.exports.ExpressAuthSessionHandlerConverter =
+    pathResolve("ExpressAuthSessionHandlerConverter");
 
-module.exports.ExpressDefaultRequestManager =
-    pathResolve("ExpressDefaultRequestManager");
+module.exports.ExpressFileHandlerConverter =
+    pathResolve("ExpressFileHandlerConverter");
 
-module.exports.ExpressDefaultResponseManager =
-    pathResolve("ExpressDefaultResponseManager");
+module.exports.ExpressHandler =
+    pathResolve("ExpressHandler");
 
-module.exports.ExpressDefaultServerConfigurator =
-    pathResolve("ExpressDefaultServerConfigurator");
+module.exports.ExpressHandlerChain =
+    pathResolve("ExpressHandlerChain");
 
-module.exports.ExpressServer = 
+module.exports.ExpressParseJsonHandlerConverter =
+    pathResolve("ExpressParseJsonHandlerConverter");
+
+module.exports.ExpressParseUrlHandlerConverter =
+    pathResolve("ExpressParseUrlHandlerConverter");
+
+module.exports.ExpressServer =
     pathResolve("ExpressServer");
 
-module.exports.ExpressServerTemplate =
-    pathResolve("ExpressServerTemplate");
+module.exports.ExpressSessionHandlerConverter =
+    pathResolve("ExpressSessionHandlerConverter");
