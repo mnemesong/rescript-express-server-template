@@ -1,6 +1,6 @@
 {
   "name": "rescript-express-server-template",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "rescript express server",
   "main": "index.js",
   "scripts": {
@@ -22,10 +22,8 @@
     "url": "https://github.com/mnemesong/rescript-express-server-template/issues"
   },
   "homepage": "https://github.com/mnemesong/rescript-express-server-template#readme",
-  "devDependencies": {
-    "rescript": "^10.1.4"
-  },
   "dependencies": {
+    "rescript": "^10.1.4",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "multer": "*"
