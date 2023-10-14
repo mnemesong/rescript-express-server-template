@@ -1,1 +1,1 @@
-{ "dirs" : [ "rescript" , "rescript\\test-app" , "rescript\\src" ] , "pkgs" : [] , "generated" : [] }
+{ "dirs" : [ "rescript" , "rescript\\test-app" , "rescript\\src" ] , "pkgs" : [ [ "rescript-web-types" , "D:\\rescript-projects\\rescript-express-server-template\\node_modules\\rescript-web-types" ] ] , "generated" : [] }

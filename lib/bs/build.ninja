@@ -1,4 +1,5 @@
 rescript = 1
+g_finger := D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml\install.stamp
 rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
 o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
@@ -7,7 +8,7 @@ rule deps
   restat = 1
 o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
 rule mij
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js $i
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript -I "D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml"   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js -bs-v $g_finger $i
   dyndep = 1
   restat = 1
 o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast

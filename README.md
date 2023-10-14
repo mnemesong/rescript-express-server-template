@@ -2,6 +2,10 @@
 extemdable rescript server and routes builder
 
 
+## Depends
+- rescript-web-types: https://github.com/mnemesong/rescript-web-types
+
+
 ## Example of usage
 ```rescript
 //file ExpressPublicUsageCase.res

@@ -3,36 +3,13 @@ const express = require("express");
 `)
 
 open Belt
+open WebTypes
 
 type request
 type response
 type middleware
 type expressApp
 
-type routeType =
-    [ #checkout
-    | #copy
-    | #get
-    | #delete
-    | #head
-    | #lock
-    | #merge
-    | #mkactivity
-    | #mkcol
-    | #move
-    | #notify
-    | #options
-    | #patch
-    | #post
-    | #purge
-    | #put
-    | #report
-    | #search
-    | #subscribe
-    | #trace
-    | #unlock
-    | #unsubscribe
-    ]
 type scenario = (request, response) => unit
 type handler = Handler(array<middleware>, scenario)
 
