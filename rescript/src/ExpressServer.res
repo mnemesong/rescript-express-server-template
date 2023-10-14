@@ -15,7 +15,7 @@ type handler = Handler(array<middleware>, scenario)
 
 type url = string
 
-type route = Route(routeType, url, handler)
+type route = Route(method, url, handler)
 
 let runServer = (
     routes: array<route>,
@@ -30,14 +30,14 @@ let runServer = (
     } `)
     Array.forEach(middlewares, (mw) => useMiddleware(app, mw))
     let registerRoute = (expressApp: expressApp, route: route): unit => {
-        let Route(routeType, url, handler) = route
+        let Route(method, url, handler) = route
         let Handler(middlewares, scenario) = handler
-        let reg: (expressApp, routeType, url, array<middleware>, scenario) => unit =
-        %raw(`function(app, routeType, url, middlewares, scenario) {
+        let reg: (expressApp, method, url, array<middleware>, scenario) => unit =
+        %raw(`function(app, method, url, middlewares, scenario) {
             const fParams = [url].concat(middlewares).concat([scenario]);
-            app[routeType](...fParams);
+            app[method](...fParams);
         }`)
-        reg(expressApp, routeType, url, middlewares, scenario)
+        reg(expressApp, method, url, middlewares, scenario)
     }
     Array.forEach(routes, (r) => registerRoute(app, r))
     let listen: (expressApp, int, () => unit) => unit = 
