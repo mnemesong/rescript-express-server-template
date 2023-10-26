@@ -2,46 +2,53 @@ rescript = 1
 g_finger := D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml\install.stamp
 rule astj
   command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe"  -bs-v 10.1.4  -absname -bs-ast -o $out $i
-o rescript\test-app\ExpressServerTest.ast : astj ..\..\rescript\test-app\ExpressServerTest.res
-rule deps
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash a5fb807b62f45249c51089fec0a4a358 $in
+o test-app\ExpressServerTest.ast : astj ..\..\test-app\ExpressServerTest.res
+rule deps_dev
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -g -hash ead72440d1ae07f7b76adad67cc87198 $in
   restat = 1
-o rescript\test-app\ExpressServerTest.d : deps rescript\test-app\ExpressServerTest.ast
-rule mij
-  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I "rescript\src" -I "rescript\test-app" -I rescript -I "D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml"   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js -bs-v $g_finger $i
+o test-app\ExpressServerTest.d : deps_dev test-app\ExpressServerTest.ast
+rule mij_dev
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I test-app -I src -I "D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml"    -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js -bs-v $g_finger $i
   dyndep = 1
   restat = 1
-o rescript\test-app\ExpressServerTest.cmj rescript\test-app\ExpressServerTest.cmi ..\js\rescript\test-app\ExpressServerTest.bs.js : mij rescript\test-app\ExpressServerTest.ast
-o rescript\test-app\ExpressPublicUsageCase.ast : astj ..\..\rescript\test-app\ExpressPublicUsageCase.res
-o rescript\test-app\ExpressPublicUsageCase.d : deps rescript\test-app\ExpressPublicUsageCase.ast
-o rescript\test-app\ExpressPublicUsageCase.cmj rescript\test-app\ExpressPublicUsageCase.cmi ..\js\rescript\test-app\ExpressPublicUsageCase.bs.js : mij rescript\test-app\ExpressPublicUsageCase.ast
-o rescript\test-app\ExpressSessionAuthTest.ast : astj ..\..\rescript\test-app\ExpressSessionAuthTest.res
-o rescript\test-app\ExpressSessionAuthTest.d : deps rescript\test-app\ExpressSessionAuthTest.ast
-o rescript\test-app\ExpressSessionAuthTest.cmj rescript\test-app\ExpressSessionAuthTest.cmi ..\js\rescript\test-app\ExpressSessionAuthTest.bs.js : mij rescript\test-app\ExpressSessionAuthTest.ast
-o rescript\test-app\ExpressServerMiddlewaresTest.ast : astj ..\..\rescript\test-app\ExpressServerMiddlewaresTest.res
-o rescript\test-app\ExpressServerMiddlewaresTest.d : deps rescript\test-app\ExpressServerMiddlewaresTest.ast
-o rescript\test-app\ExpressServerMiddlewaresTest.cmj rescript\test-app\ExpressServerMiddlewaresTest.cmi ..\js\rescript\test-app\ExpressServerMiddlewaresTest.bs.js : mij rescript\test-app\ExpressServerMiddlewaresTest.ast
-o rescript\src\ExpressServer.ast : astj ..\..\rescript\src\ExpressServer.res
-o rescript\src\ExpressServer.d : deps rescript\src\ExpressServer.ast
-o rescript\src\ExpressServer.cmj rescript\src\ExpressServer.cmi ..\js\rescript\src\ExpressServer.bs.js : mij rescript\src\ExpressServer.ast
-o rescript\src\ExpressHandler.ast : astj ..\..\rescript\src\ExpressHandler.res
-o rescript\src\ExpressHandler.d : deps rescript\src\ExpressHandler.ast
-o rescript\src\ExpressHandler.cmj rescript\src\ExpressHandler.cmi ..\js\rescript\src\ExpressHandler.bs.js : mij rescript\src\ExpressHandler.ast
-o rescript\src\ExpressHandlerChain.ast : astj ..\..\rescript\src\ExpressHandlerChain.res
-o rescript\src\ExpressHandlerChain.d : deps rescript\src\ExpressHandlerChain.ast
-o rescript\src\ExpressHandlerChain.cmj rescript\src\ExpressHandlerChain.cmi ..\js\rescript\src\ExpressHandlerChain.bs.js : mij rescript\src\ExpressHandlerChain.ast
-o rescript\src\ExpressFileHandlerConverter.ast : astj ..\..\rescript\src\ExpressFileHandlerConverter.res
-o rescript\src\ExpressFileHandlerConverter.d : deps rescript\src\ExpressFileHandlerConverter.ast
-o rescript\src\ExpressFileHandlerConverter.cmj rescript\src\ExpressFileHandlerConverter.cmi ..\js\rescript\src\ExpressFileHandlerConverter.bs.js : mij rescript\src\ExpressFileHandlerConverter.ast
-o rescript\src\ExpressSessionHandlerConverter.ast : astj ..\..\rescript\src\ExpressSessionHandlerConverter.res
-o rescript\src\ExpressSessionHandlerConverter.d : deps rescript\src\ExpressSessionHandlerConverter.ast
-o rescript\src\ExpressSessionHandlerConverter.cmj rescript\src\ExpressSessionHandlerConverter.cmi ..\js\rescript\src\ExpressSessionHandlerConverter.bs.js : mij rescript\src\ExpressSessionHandlerConverter.ast
-o rescript\src\ExpressParseUrlHandlerConverter.ast : astj ..\..\rescript\src\ExpressParseUrlHandlerConverter.res
-o rescript\src\ExpressParseUrlHandlerConverter.d : deps rescript\src\ExpressParseUrlHandlerConverter.ast
-o rescript\src\ExpressParseUrlHandlerConverter.cmj rescript\src\ExpressParseUrlHandlerConverter.cmi ..\js\rescript\src\ExpressParseUrlHandlerConverter.bs.js : mij rescript\src\ExpressParseUrlHandlerConverter.ast
-o rescript\src\ExpressParseJsonHandlerConverter.ast : astj ..\..\rescript\src\ExpressParseJsonHandlerConverter.res
-o rescript\src\ExpressParseJsonHandlerConverter.d : deps rescript\src\ExpressParseJsonHandlerConverter.ast
-o rescript\src\ExpressParseJsonHandlerConverter.cmj rescript\src\ExpressParseJsonHandlerConverter.cmi ..\js\rescript\src\ExpressParseJsonHandlerConverter.bs.js : mij rescript\src\ExpressParseJsonHandlerConverter.ast
-o rescript\src\ExpressAuthSessionHandlerConverter.ast : astj ..\..\rescript\src\ExpressAuthSessionHandlerConverter.res
-o rescript\src\ExpressAuthSessionHandlerConverter.d : deps rescript\src\ExpressAuthSessionHandlerConverter.ast
-o rescript\src\ExpressAuthSessionHandlerConverter.cmj rescript\src\ExpressAuthSessionHandlerConverter.cmi ..\js\rescript\src\ExpressAuthSessionHandlerConverter.bs.js : mij rescript\src\ExpressAuthSessionHandlerConverter.ast
+o test-app\ExpressServerTest.cmj test-app\ExpressServerTest.cmi ..\js\test-app\ExpressServerTest.bs.js : mij_dev test-app\ExpressServerTest.ast
+o test-app\ExpressPublicUsageCase.ast : astj ..\..\test-app\ExpressPublicUsageCase.res
+o test-app\ExpressPublicUsageCase.d : deps_dev test-app\ExpressPublicUsageCase.ast
+o test-app\ExpressPublicUsageCase.cmj test-app\ExpressPublicUsageCase.cmi ..\js\test-app\ExpressPublicUsageCase.bs.js : mij_dev test-app\ExpressPublicUsageCase.ast
+o test-app\ExpressSessionAuthTest.ast : astj ..\..\test-app\ExpressSessionAuthTest.res
+o test-app\ExpressSessionAuthTest.d : deps_dev test-app\ExpressSessionAuthTest.ast
+o test-app\ExpressSessionAuthTest.cmj test-app\ExpressSessionAuthTest.cmi ..\js\test-app\ExpressSessionAuthTest.bs.js : mij_dev test-app\ExpressSessionAuthTest.ast
+o test-app\ExpressServerMiddlewaresTest.ast : astj ..\..\test-app\ExpressServerMiddlewaresTest.res
+o test-app\ExpressServerMiddlewaresTest.d : deps_dev test-app\ExpressServerMiddlewaresTest.ast
+o test-app\ExpressServerMiddlewaresTest.cmj test-app\ExpressServerMiddlewaresTest.cmi ..\js\test-app\ExpressServerMiddlewaresTest.bs.js : mij_dev test-app\ExpressServerMiddlewaresTest.ast
+o src\ExpressServer.ast : astj ..\..\src\ExpressServer.res
+rule deps
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsb_helper.exe" -hash ead72440d1ae07f7b76adad67cc87198 $in
+  restat = 1
+o src\ExpressServer.d : deps src\ExpressServer.ast
+rule mij
+  command = "D:\rescript-projects\rescript-express-server-template\node_modules\rescript\win32\bsc.exe" -I src -I "D:\rescript-projects\rescript-express-server-template\node_modules\rescript-web-types\lib\ocaml"   -bs-package-name rescript-express-server-template -bs-package-output commonjs:lib\js\$in_d:.bs.js -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src\ExpressServer.cmj src\ExpressServer.cmi ..\js\src\ExpressServer.bs.js : mij src\ExpressServer.ast
+o src\ExpressHandler.ast : astj ..\..\src\ExpressHandler.res
+o src\ExpressHandler.d : deps src\ExpressHandler.ast
+o src\ExpressHandler.cmj src\ExpressHandler.cmi ..\js\src\ExpressHandler.bs.js : mij src\ExpressHandler.ast
+o src\ExpressHandlerChain.ast : astj ..\..\src\ExpressHandlerChain.res
+o src\ExpressHandlerChain.d : deps src\ExpressHandlerChain.ast
+o src\ExpressHandlerChain.cmj src\ExpressHandlerChain.cmi ..\js\src\ExpressHandlerChain.bs.js : mij src\ExpressHandlerChain.ast
+o src\ExpressFileHandlerConverter.ast : astj ..\..\src\ExpressFileHandlerConverter.res
+o src\ExpressFileHandlerConverter.d : deps src\ExpressFileHandlerConverter.ast
+o src\ExpressFileHandlerConverter.cmj src\ExpressFileHandlerConverter.cmi ..\js\src\ExpressFileHandlerConverter.bs.js : mij src\ExpressFileHandlerConverter.ast
+o src\ExpressSessionHandlerConverter.ast : astj ..\..\src\ExpressSessionHandlerConverter.res
+o src\ExpressSessionHandlerConverter.d : deps src\ExpressSessionHandlerConverter.ast
+o src\ExpressSessionHandlerConverter.cmj src\ExpressSessionHandlerConverter.cmi ..\js\src\ExpressSessionHandlerConverter.bs.js : mij src\ExpressSessionHandlerConverter.ast
+o src\ExpressParseUrlHandlerConverter.ast : astj ..\..\src\ExpressParseUrlHandlerConverter.res
+o src\ExpressParseUrlHandlerConverter.d : deps src\ExpressParseUrlHandlerConverter.ast
+o src\ExpressParseUrlHandlerConverter.cmj src\ExpressParseUrlHandlerConverter.cmi ..\js\src\ExpressParseUrlHandlerConverter.bs.js : mij src\ExpressParseUrlHandlerConverter.ast
+o src\ExpressParseJsonHandlerConverter.ast : astj ..\..\src\ExpressParseJsonHandlerConverter.res
+o src\ExpressParseJsonHandlerConverter.d : deps src\ExpressParseJsonHandlerConverter.ast
+o src\ExpressParseJsonHandlerConverter.cmj src\ExpressParseJsonHandlerConverter.cmi ..\js\src\ExpressParseJsonHandlerConverter.bs.js : mij src\ExpressParseJsonHandlerConverter.ast
+o src\ExpressAuthSessionHandlerConverter.ast : astj ..\..\src\ExpressAuthSessionHandlerConverter.res
+o src\ExpressAuthSessionHandlerConverter.d : deps src\ExpressAuthSessionHandlerConverter.ast
+o src\ExpressAuthSessionHandlerConverter.cmj src\ExpressAuthSessionHandlerConverter.cmi ..\js\src\ExpressAuthSessionHandlerConverter.bs.js : mij src\ExpressAuthSessionHandlerConverter.ast

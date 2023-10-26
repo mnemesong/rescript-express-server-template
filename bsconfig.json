@@ -1,18 +1,21 @@
 {
-    "name": "rescript-express-server-template",
-    "sources": [
-      {
-        "dir": "rescript",
-        "subdirs": true
-      }
-    ],
-    "package-specs": [
-      {
-        "module": "commonjs"
-      }
-    ],
-    "suffix": ".bs.js",
-    "bs-dependencies": [
-      "rescript-web-types"
-    ]
-  }
+  "name": "rescript-express-server-template",
+  "sources": [
+    {
+      "dir": "src"
+    },
+    {
+      "dir": "test-app",
+      "type": "dev"
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "commonjs"
+    }
+  ],
+  "suffix": ".bs.js",
+  "bs-dependencies": [
+    "rescript-web-types"
+  ]
+}
