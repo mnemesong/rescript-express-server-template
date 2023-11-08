@@ -69,308 +69,311 @@ runServer(routes, [], 80, () => {Js.Console.log("Server started!")})
 ```
 
 
-## Express server
+## ExpressServer.resi
 ExpressServer has simple signature to server running
 ```rescript
-//file ExpressServer.res
 open Belt
+open WebTypes
 
 type request
 type response
 type middleware
 type expressApp
 
-type routeType =
-    [ #checkout
-    | #copy
-    | #get
-    | #delete
-    | #head
-    | #lock
-    | #merge
-    | #mkactivity
-    | #mkcol
-    | #move
-    | #notify
-    | #options
-    | #patch
-    | #post
-    | #purge
-    | #put
-    | #report
-    | #search
-    | #subscribe
-    | #trace
-    | #unlock
-    | #unsubscribe
-    ]
 type scenario = (request, response) => unit
 type handler = Handler(array<middleware>, scenario)
 
 type url = string
 
-type route = Route(routeType, url, handler)
+type route = Route(method, url, handler)
 
-let runServer = (
-    routes: array<route>,
-    middlewares: array<middleware>,
-    port: int,
-    onInit: () => unit
-): unit
+let staticFilesMiddleware: string => middleware
+
+let runServer: (array<route>, array<middleware>, int, unit => unit) => unit
 ```
 
 
-## ExpressHandler
+## ExpressHandler.resi
 Defaultly server await handler: `type handler = Handler(array<middlewares>, (req, res) => unit)`
 Handler modules allow to modify request and response and write hanlder-func use
 this modified versions: `handler' = (req' => res')`, and convert this function
 into default `handler` type.
-
 ```rescript
-//file ExpressHandler.res
+open ExpressServer
+open WebTypes
 
-//Handler is some module with signature:
 module type Handler = {
-    type hReq
-    type hRes
+  type hReq
+  type hRes
 
-    let wrapReq: ((request, response)) => hReq
-    let applyRes: (hReq, hRes) => unit
-    let primalReq: (hReq) => (request, response)
-    let convert: 
-        (hReq => hRes) => (request, response) => unit
-    let middlewares: array<middleware>
-    let handler: (hReq => hRes) => handler
+  let wrapReq: ((request, response)) => hReq
+  let applyRes: (hReq, hRes) => unit
+  let primalReq: hReq => (request, response)
+  let convert: (hReq => hRes, request, response) => unit
+  let middlewares: array<middleware>
+  let handler: (hReq => hRes) => handler
 }
-//which may be used as
-...
-Route(#get, "/", SomeHanderModule.handler(someF: req'=>res'))
-//               ^will be converted into ------------------^
-//                Handler(array<middlewares>, (request, response) => unit)
-...
+
+type serverRespType =
+  | Html(string)
+  | Json(string)
+  | OpenFile(string)
+  | DownloadFile(string)
+  | Redirect(string, redirectStatus)
+  | Error(string, errorStatus)
+
+module type Default = Handler with type hReq = (request, response) and type hRes = serverRespType
+
+module type ErrorStrategy = {
+  let wrapTryCatch: (unit => unit) => unit
+}
+
+module DefaultErrorStrategy: ErrorStrategy
+
+module type MakeDefault = (ErrorStrategy: ErrorStrategy) => Default
+//Default handler
+module MakeDefault: MakeDefault
 ```
 where `someF: req' => res'` is handler-function writen on confortable for coding and 
 reading language. Handler module allows this funciton conversation.
 
 
-## ExpressHandlerChain
+## ExpressHandlerChain.resi
 Is a Module of Hanlder type which allows depends with some old Handler and
 allowa chain of conversations. 
 
 This modules defining with ExpressHandlerChain.Make functor:
 ```rescript
-//file ExpressHandlerChain.res
-module type Make = (
-    OldHandler: Handler, 
-    Converter: Converter //minimal module for building HandlerChain. See later..
-        with type oldReq = OldHandler.hReq
-        and type oldRes = OldHandler.hRes
-) => Handler
-    with type hReq = Converter.newReq
-    and type hRes = Converter.newRes
-```
+open ExpressHandler
+open ExpressServer
+open Belt
 
+module type Converter = {
+  type oldReq
+  type newReq
+  type oldRes
+  type newRes
 
-## Default Handler
-its required for be used as last chain part in handlers chain
-```rescript
-//file ExpressHandler.res
-module DefaultErrorStrategy: ErrorStrategy = {
-    let wrapTryCatch: (() => unit) => unit =
-        (handler) => try {
-            handler()
-        } catch {
-            | Js.Exn.Error(obj) => Js.Console.log(obj)
-            | _ => Js.Console.log("unknown error")
-        }
+  let wrapStepReq: oldReq => newReq
+  let getOldReq: newReq => oldReq
+  let applyStepRes: (newReq, newRes) => oldRes
+  let middlewares: array<middleware>
 }
-module type MakeDefault = (ErrorStrategy: ErrorStrategy) => Default
-module MakeDefault: MakeDefault = (ErrorStrategy: ErrorStrategy) => ...
+
+module type MakeConverter = (OldHandler: Handler) =>
+(Converter with type oldReq = OldHandler.hReq and type oldRes = OldHandler.hRes)
+
+module type Make = (
+  OldHandler: Handler,
+  Converter: Converter with type oldReq = OldHandler.hReq and type oldRes = OldHandler.hRes,
+) => (Handler with type hReq = Converter.newReq and type hRes = Converter.newRes)
+
+module Make: Make
 ```
 
 
-## ExpressHandlerConverter
+## ExpressHandlerConverter.resi
 is a minimal required module functionality for creation HandlerMiddleware chain.
 ```rescript
-//file ExpressHandlerChain.res
-module type Converter = {
-    type oldReq
-    type newReq
-    type oldRes
-    type newRes
+open ExpressServer
+open ExpressHandler
+open ExpressHandlerChain
 
-    let wrapStepReq: (oldReq) => newReq
-    let getOldReq: (newReq) => oldReq
-    let applyStepRes: (newReq, newRes) => oldRes
-    let middlewares: array<middleware>
-}
+type jsonReq<'a> = JsonReq('a, unknown)
+
+module type Make = (OldHandler: Handler) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = jsonReq<OldHandler.hReq>
+    and type oldRes = OldHandler.hRes
+    and type newRes = OldHandler.hRes
+)
+
+module Make: Make
 ```
 Implement this module and you will make build chain of handlers
 
 
 ## Standart Handler Converters
 
-### ExpressParseUrlHandlerConverter
+### ExpressParseUrlHandlerConverter.resi
 needs for parsing params from url of GET request
 ```rescript
-//file ExpressParseUrlHandlerConverter.res
+open ExpressServer
+open ExpressHandler
+open ExpressHandlerChain
+
 type urlReq<'a> = UrlReq('a, unknown)
 
-module type T = (OldHandler: Handler) =>
-    Converter
-        with type oldReq = OldHandler.hReq
-        and type newReq = urlReq<OldHandler.hReq>
-        and type oldRes = OldHandler.hRes
-        and type newRes = OldHandler.hRes
+module type Make = (OldHandler: Handler) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = urlReq<OldHandler.hReq>
+    and type oldRes = OldHandler.hRes
+    and type newRes = OldHandler.hRes
+)
 
-module Make: T = (OldHandler: Handler) => ...
+module Make: Make
 ```
 
-### ExpressJsonHandlerConverter
+### ExpressJsonHandlerConverter.resi
 needs for parsing json-request-body from POST request
 ```rescript
-//file ExpressJsonHandlerConverter.res
+open ExpressServer
+open ExpressHandler
+open ExpressHandlerChain
+
 type jsonReq<'a> = JsonReq('a, unknown)
 
-module type T = (OldHandler: Handler) =>
-    Converter
-        with type oldReq = OldHandler.hReq
-        and type newReq = jsonReq<OldHandler.hReq>
-        and type oldRes = OldHandler.hRes
-        and type newRes = OldHandler.hRes
+module type Make = (OldHandler: Handler) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = jsonReq<OldHandler.hReq>
+    and type oldRes = OldHandler.hRes
+    and type newRes = OldHandler.hRes
+)
 
-module Make: T = (OldHandler: Handler) => ...
+module Make: Make
 ```
 
-### ExpressSessionHandlerConverter
+### ExpressSessionHandlerConverter.resi
 needs for parsing session data and handle session-effects
 ```rescript
-//file ExpressSessionHandlerConverter.res
+open ExpressHandler
+open ExpressHandlerChain
+
 type sessionReq<'a> = SessionReq('a, unknown)
-type sessionEffect = 
-    | SetSessionValue(string, unknown)
-    | DestroySession
+type sessionEffect =
+  | SetSessionValue(string, unknown)
+  | DestroySession
 type sessionRes<'a> = SessionRes('a, array<sessionEffect>)
 
 type sessionParam =
-    | SessionResave(bool)
-    | SessionSaveUnitialized(bool)
-    | Cookie(bool, option<int>)
+  | SessionResave(bool)
+  | SessionSaveUnitialized(bool)
+  | Cookie(bool, option<int>)
 
 type sessionConfig = SessionConfig(string, array<sessionParam>)
 
-module type SessionConfigurator ={
-    let getSessionConfig: () => sessionConfig
+let setSessionValue: (string, 'a) => sessionEffect
+
+module type SessionConfigurator = {
+  let getSessionConfig: unit => sessionConfig
 }
-//for example:
-//module DefaultConfigurator: SessionConfigurator = {
-//    let getSessionConfig: () => sessionConfig = 
-//        () => SessionConfig("dksand9u7sa9db9", [])
-//}
 
-module type T = (OldHandler: Handler, SessionConfigurator: SessionConfigurator) =>
-    Converter
-        with type oldReq = OldHandler.hReq
-        and type newReq = sessionReq<OldHandler.hReq>
-        and type oldRes = OldHandler.hRes
-        and type newRes = sessionRes<OldHandler.hRes>
+module DefaultConfigurator: SessionConfigurator
 
-module Make: T = (OldHandler: Handler, SessionConfigurator: SessionConfigurator) => ...
+module type Make = (OldHandler: Handler, SessionConfigurator: SessionConfigurator) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = sessionReq<OldHandler.hReq>
+    and type oldRes = OldHandler.hRes
+    and type newRes = sessionRes<OldHandler.hRes>
+)
+
+module Make: Make
 ```
 
-### ExpressFileHandlerConverter
+### ExpressFileHandlerConverter.resi
 needs for building routes awaits file uploading and get access to files
 ```rescript
-//file ExpressFileHandlerConverter.res
+open ExpressServer
+open ExpressHandler
+open ExpressHandlerChain
+
 type fileAwaitField = {
-    name: string,
-    maxCount: int
+  name: string,
+  maxCount: int,
 }
 
 type file = {
-    fieldname: string,
-    originalname: string,
-    encoding: string,
-    mimetype: string,
-    destination: string,
-    filename: string,
-    path: string,
-    size: int
+  fieldname: string,
+  originalname: string,
+  encoding: string,
+  mimetype: string,
+  destination: string,
+  filename: string,
+  path: string,
+  size: int,
 }
 type fileParsedField = {fileName: string, files: array<file>}
 type fileReq<'a> = FileReq('a, array<fileParsedField>)
 
 module type FileParseConfig = {
-    let getFileAwaitFields: () => array<fileAwaitField>
-    let getDestPath: () => string
+  let getFileAwaitFields: unit => array<fileAwaitField>
+  let getDestPath: unit => string
 }
 
-module type T = (OldHandler: Handler, FileParseConfig: FileParseConfig) =>
-    Converter
-        with type oldReq = OldHandler.hReq
-        and type newReq = fileReq<OldHandler.hReq>
-        and type oldRes = OldHandler.hRes
-        and type newRes = OldHandler.hRes
+module type Make = (OldHandler: Handler, FileParseConfig: FileParseConfig) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = fileReq<OldHandler.hReq>
+    and type oldRes = OldHandler.hRes
+    and type newRes = OldHandler.hRes
+)
 
-module Make: T = (OldHandler: Handler, FileParseConfig: FileParseConfig) => ...
+module Make: Make
 ```
 
 
-### ExpressAuthSessionHandlerConverter
+### ExpressAuthSessionHandlerConverter.resi
 needs for authentification using session.
 Warning! in case of use with ExpressSessionHandlerConverter use same SessionManager
 ```rescript
+open ExpressHandler
+open ExpressHandlerChain
+
 type authSessReq<'r, 'u> = AuthSessReq('r, option<'u>)
 
-type authSessEffect<'u> = 
-    | Login('u)
-    | Logout
+type authSessEffect<'u> =
+  | Login('u)
+  | Logout
 
 type authSessRes<'r, 'u> = AuthSessRes('r, array<authSessEffect<'u>>)
 
 module type UserManager = {
-    type loginData
-    type user
-    type userCheckAuthData
+  type loginData
+  type user
+  type userCheckAuthData
 
-    let produceAuthData: (user) => userCheckAuthData
-    let checkAuthData: (userCheckAuthData) => option<user>
-    let checkLoginData: (loginData) => option<user>
-    let invalidLoginDataMsg: () => string
+  let produceAuthData: user => userCheckAuthData
+  let checkAuthData: userCheckAuthData => option<user>
+  let checkLoginData: loginData => option<user>
+  let invalidLoginDataMsg: unit => string
 }
 
 type sessionParam =
-    | SessionResave(bool)
-    | SessionSaveUnitialized(bool)
-    | Cookie(bool, option<int>)
+  | SessionResave(bool)
+  | SessionSaveUnitialized(bool)
+  | Cookie(bool, option<int>)
 
 type sessionConfig = SessionConfig(string, array<sessionParam>)
 
-module type SessionConfigurator ={
-    let getSessionConfig: () => sessionConfig
+module type SessionConfigurator = {
+  let getSessionConfig: unit => sessionConfig
 }
 
-module DefaultConfigurator: SessionConfigurator = {
-    let getSessionConfig: () => sessionConfig = 
-        () => SessionConfig("dksand9u7sa9db9", [])
-}
+module DefaultConfigurator: SessionConfigurator
 
-module type T = (
-    OldHandler: Handler, 
-    UserManager: UserManager, 
-    SessionConfigurator: SessionConfigurator
-) => Converter
-       with type oldReq = OldHandler.hReq
-        and type newReq = authSessReq<OldHandler.hReq, UserManager.user>
-        and type oldRes = OldHandler.hRes
-        and type newRes = 
-            authSessRes<OldHandler.hRes, UserManager.user>
+module type Make = (
+  OldHandler: Handler,
+  UserManager: UserManager,
+  SessionConfigurator: SessionConfigurator,
+) =>
+(
+  Converter
+    with type oldReq = OldHandler.hReq
+    and type newReq = authSessReq<OldHandler.hReq, UserManager.user>
+    and type oldRes = OldHandler.hRes
+    and type newRes = authSessRes<OldHandler.hRes, UserManager.user>
+)
 
-module Make: T = (
-    OldHandler: Handler, 
-    UserManager: UserManager, 
-    SessionConfigurator: SessionConfigurator
-) => ...
+module Make: Make
 ```
 
 

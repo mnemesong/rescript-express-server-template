@@ -1,6 +1,6 @@
 {
   "name": "rescript-express-server-template",
-  "version": "1.3.1",
+  "version": "1.4.1",
   "description": "rescript express server",
   "main": "index.js",
   "scripts": {
